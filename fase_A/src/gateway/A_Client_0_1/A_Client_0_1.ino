@@ -1,25 +1,38 @@
-/*********
-  Rui Santos
-  Complete instructions at https://RandomNerdTutorials.com/esp32-ble-server-client/
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files.
-  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*********/
+#include <ThingSpeak.h>
 
+#include <ETH.h>
+#include <WiFi.h>
+#include <WiFiAP.h>
+#include <WiFiClient.h>
+#include <WiFiGeneric.h>
+#include <WiFiMulti.h>
+#include <WiFiScan.h>
+#include <WiFiServer.h>
+#include <WiFiSTA.h>
+#include <WiFiType.h>
+#include <WiFiUdp.h>
+
+
+#include <WiFi.h>
+#include "secrets.h"
+#include "ThingSpeak.h" 
+char ssid[] = SECRET_SSID; 
+char pass[] = SECRET_PASS;
+int keyIndex = 0;
+WiFiClient  client;
+
+unsigned long myChannelNumber = SECRET_CH_ID;
+const char * myWriteAPIKey = SECRET_WRITE_APIKEY;
 #include <BLEDevice.h>
 #include <Wire.h>
 
-//Default Temperature is in Celsius
-//Comment the next line for Temperature in Fahrenheit
 #define temperatureCelsius
 
-//BLE Server name (the other ESP32 name running the server sketch)
 #define bleServerName "grupo_2_ESP"
 
-/* UUID's of the service, characteristic that we want to read*/
-// BLE Service
 static BLEUUID bmeServiceUUID("1aa3d607-8465-4476-a592-40a6b0f14efb");
 
-// BLE Characteristics
+
 #define temperatureCelsius
   //Temperature Celsius Characteristic
   static BLEUUID temperatureCharacteristicUUID("b673b689-9772-47a8-825d-51f07e9a3098");
@@ -118,6 +131,12 @@ void setup() {
   pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
   pBLEScan->setActiveScan(true);
   pBLEScan->start(30);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for Leonardo native USB port only
+  }
+  
+  WiFi.mode(WIFI_STA);   
+  ThingSpeak.begin(client);  // Initialize ThingSpeak
 }
 
 void loop() {
@@ -137,6 +156,8 @@ void loop() {
   }
   //if new temperature readings are available, print in the OLED
   int i =0;
+  char hum[2];
+  char temp[3];
   if (newTemperature){
     newTemperature = false;
     while(temperatureChar[i]!='\0'){
@@ -145,5 +166,29 @@ void loop() {
     }
   }
  i =0;
-  delay(1000); // Delay a second between loops.
+ hum[0]=temperatureChar[0];
+ hum[1]=temperatureChar[1];
+ temp[0]=temperatureChar[2];
+ temp[1]=temperatureChar[3];
+ temp[2]=temperatureChar[4];
+  
+    // Connect or reconnect to WiFi
+  if(WiFi.status() != WL_CONNECTED){
+    Serial.print("Attempting to connect to SSID: ");
+    Serial.println(SECRET_SSID);
+    while(WiFi.status() != WL_CONNECTED){
+      WiFi.begin(ssid, pass);  // Connect to WPA/WPA2 network. Change this line if using open or WEP network
+      Serial.print(".");
+      delay(5000);     
+    } 
+    Serial.println("\nConnected.");
+  }
+  ThingSpeak.setField(1,hum);
+  ThingSpeak.setField(2, temp);
+    ThingSpeak.setStatus("hey");
+  
+  // write to the ThingSpeak channel
+  int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+  
+  delay(15000); // Delay a second between loops.
 }
