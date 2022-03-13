@@ -36,7 +36,7 @@ static BLEUUID bmeServiceUUID("1aa3d607-8465-4476-a592-40a6b0f14efb");
 #define temperatureCelsius
   //Temperature Celsius Characteristic
   static BLEUUID temperatureCharacteristicUUID("b673b689-9772-47a8-825d-51f07e9a3098");
-
+  
 //Flags stating if should begin connecting and if the connection is up
 static boolean doConnect = false;
 static boolean connected = false;
@@ -54,7 +54,7 @@ const uint8_t notificationOff[] = {0x0, 0x0};
 
 
 //Variables to store temperature and humidity
-char* temperatureChar;
+char*  temperatureChar;
 
 
 //Flags to check whether new temperature and humidity readings are available
@@ -143,6 +143,7 @@ void loop() {
   // If the flag "doConnect" is true then we have scanned for and found the desired
   // BLE Server with which we wish to connect.  Now we connect to it.  Once we are
   // connected we set the connected flag to be true.
+  char strCopy[6];
   if (doConnect == true) {
     if (connectToServer(*pServerAddress)) {
       Serial.println("We are now connected to the BLE Server.");
@@ -156,21 +157,38 @@ void loop() {
   }
   //if new temperature readings are available, print in the OLED
   int i =0;
-  char hum[2];
-  char temp[3];
+  char hum[3];
+  char temp[5];
   if (newTemperature){
     newTemperature = false;
     while(temperatureChar[i]!='\0'){
     Serial.print(temperatureChar);
     i++;
     }
+    Serial.print("\n");
   }
  i =0;
+ if(temperatureChar){
+ strcpy(strCopy,temperatureChar);
+ memset(hum,0,3*sizeof(char));
+ memset(temp,0,4*sizeof(char));
+ 
+ 
+
  hum[0]=temperatureChar[0];
  hum[1]=temperatureChar[1];
+ hum[2]='\0';
  temp[0]=temperatureChar[2];
  temp[1]=temperatureChar[3];
  temp[2]=temperatureChar[4];
+ temp[3]=temperatureChar[5];
+ temp[4]='\0';
+ Serial.print("\nStrCopy");
+ for(int i=0;i<7;i++){
+  Serial.print(temperatureChar[i]);
+  }
+  Serial.print("\n");
+ 
   
     // Connect or reconnect to WiFi
   if(WiFi.status() != WL_CONNECTED){
@@ -183,12 +201,22 @@ void loop() {
     } 
     Serial.println("\nConnected.");
   }
-  ThingSpeak.setField(1,hum);
-  ThingSpeak.setField(2, temp);
+  ThingSpeak.setField(1,temp);
+  for(int i=0;i<4;i++){
+    Serial.print(temp[i]);
+    }
+    Serial.print("\n");
+  ThingSpeak.setField(2, hum);
+    for(int i=0;i<2;i++){
+    Serial.print(hum[i]);
+    }
+  Serial.print("\n");
+  
     ThingSpeak.setStatus("hey");
   
   // write to the ThingSpeak channel
   int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
   
-  delay(15000); // Delay a second between loops.
+  delay(20000); // Delay a second between loops.
+ }
 }

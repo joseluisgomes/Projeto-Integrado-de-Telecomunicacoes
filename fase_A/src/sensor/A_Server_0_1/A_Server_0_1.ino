@@ -35,6 +35,7 @@ float hum;
 // Timer variables
 unsigned long lastTime = 0;
 unsigned long timerDelay = 30000;
+float startTime = millis();
 
 bool deviceConnected = false;
 
@@ -120,7 +121,8 @@ void loop() {
       //Notify temperature reading from BME sensor
 
         // Delay between measurements.
-        delay(delayMS);
+        
+        delay(1000);
         // Get temperature event and print its value.
         sensors_event_t event;
         dht.temperature().getEvent(&event);
@@ -153,15 +155,21 @@ void loop() {
     }
     humStringC[6]='\0'; 
     Serial.print("\n");
-    Serial.print(tempStringC[0]);
-    Serial.print(tempStringC[1]);
-    Serial.print(tempStringC[2]);
-    Serial.print(tempStringC[3]);
+    Serial.print(humStringC[0]);
+    Serial.print(humStringC[1]);
+    Serial.print(humStringC[2]);
+    Serial.print(humStringC[3]);
+    Serial.print(humStringC[4]);
+    Serial.print(humStringC[5]);
+    Serial.print(humStringC[6]);
+
 
     
     Serial.print("\n");
+    if(millis()-startTime>=20000){
   bmeCharacteristics.setValue(humStringC);
   bmeCharacteristics.notify();
+  startTime = millis();}
   
       /*#define temperatureCelsius
         static char tempC[6];
