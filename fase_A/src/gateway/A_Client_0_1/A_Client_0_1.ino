@@ -54,7 +54,7 @@ const uint8_t notificationOff[] = {0x0, 0x0};
 
 
 //Variables to store temperature and humidity
-char*  temperatureChar;
+char  temperatureChar[6];
 
 
 //Flags to check whether new temperature and humidity readings are available
@@ -108,9 +108,19 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 //When the BLE Server sends a new temperature reading with the notify property
 static void temperatureNotifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, 
                                         uint8_t* pData, size_t length, bool isNotify) {
-  //store temperature value
-  temperatureChar = (char*)pData;
+    //store temperature value
+    //memset(temperatureChar,0,sizeof(char)*7);
+    //temperatureChar = (char*)pData;
+  for(int i=0;i<6;i++){
+    if(pData=='\0')break;
+    char stor = pData[i];
+    temperatureChar[i]=stor;
+    }
   newTemperature = true;
+  Serial.print("\npData: ");
+  for(int i=0;i<7;i++){
+  
+  Serial.print(pData[i]);}
 }
 
 
@@ -155,20 +165,22 @@ void loop() {
     }
     doConnect = false;
   }
+  if(newTemperature){
   //if new temperature readings are available, print in the OLED
   int i =0;
   char hum[3];
   char temp[5];
   if (newTemperature){
-    newTemperature = false;
+    Serial.print("\nTempChar");
     while(temperatureChar[i]!='\0'){
-    Serial.print(temperatureChar);
+    Serial.print(temperatureChar[i]);
     i++;
     }
     Serial.print("\n");
   }
  i =0;
- if(temperatureChar){
+ if(newTemperature){
+  newTemperature = false;
  strcpy(strCopy,temperatureChar);
  memset(hum,0,3*sizeof(char));
  memset(temp,0,4*sizeof(char));
@@ -218,5 +230,6 @@ void loop() {
   int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
   
   delay(20000); // Delay a second between loops.
+ }
  }
 }

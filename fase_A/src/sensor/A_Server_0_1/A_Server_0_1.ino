@@ -31,6 +31,7 @@ DHT_Unified dht(DHTPIN, DHTTYPE);
 float temp;
 float tempF;
 float hum;
+float pressure;
 
 // Timer variables
 unsigned long lastTime = 0;
@@ -76,7 +77,7 @@ void setup() {
   dht.humidity().getSensor(&sensor);
   delayMS = sensor.min_delay / 1000;
   // Init BME Sensor
-  //initBME();
+  initBME();
   //turn on when included
 
   // Create the BLE Device
@@ -117,6 +118,7 @@ void loop() {
       //tempF = 1.8*temp +32;
       // Read humidity
       //hum = bme.readHumidity();
+      pressure = bme.readPressure()/100;
   
       //Notify temperature reading from BME sensor
 
@@ -162,6 +164,9 @@ void loop() {
     Serial.print(humStringC[4]);
     Serial.print(humStringC[5]);
     Serial.print(humStringC[6]);
+    Serial.print("\nPressure: ");
+    Serial.print(pressure);
+    Serial.print(" hPa");
 
 
     
@@ -196,5 +201,7 @@ void loop() {
       lastTime = millis();
       */   
    // }
+   delay(1000);
   }
+  
 }
