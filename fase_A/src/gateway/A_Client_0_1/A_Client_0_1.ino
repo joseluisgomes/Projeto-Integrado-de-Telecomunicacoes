@@ -51,11 +51,8 @@ static BLERemoteCharacteristic* temperatureCharacteristic;
 const uint8_t notificationOn[] = {0x1, 0x0};
 const uint8_t notificationOff[] = {0x0, 0x0};
 
-
-
-//Variables to store temperature and humidity
-char  temperatureChar[6];
-
+//Variable to store temperature and humidity
+char  temperatureChar[9];
 
 //Flags to check whether new temperature and humidity readings are available
 boolean newTemperature = false;
@@ -79,7 +76,6 @@ bool connectToServer(BLEAddress pAddress) {
  
   // Obtain a reference to the characteristics in the service of the remote BLE server.
   temperatureCharacteristic = pRemoteService->getCharacteristic(temperatureCharacteristicUUID);
-
 
   if (temperatureCharacteristic == nullptr) {
     Serial.print("Failed to find our characteristic UUID");
@@ -108,19 +104,13 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 //When the BLE Server sends a new temperature reading with the notify property
 static void temperatureNotifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, 
                                         uint8_t* pData, size_t length, bool isNotify) {
-    //store temperature value
-    //memset(temperatureChar,0,sizeof(char)*7);
-    //temperatureChar = (char*)pData;
-  for(int i=0;i<6;i++){
+  //casting to char: had to do it this way, classic normal way isnt working on this compiler
+  for(int i=0;i<9;i++){
     if(pData=='\0')break;
     char stor = pData[i];
     temperatureChar[i]=stor;
     }
   newTemperature = true;
-  Serial.print("\npData: ");
-  for(int i=0;i<7;i++){
-  
-  Serial.print(pData[i]);}
 }
 
 
@@ -153,7 +143,6 @@ void loop() {
   // If the flag "doConnect" is true then we have scanned for and found the desired
   // BLE Server with which we wish to connect.  Now we connect to it.  Once we are
   // connected we set the connected flag to be true.
-  char strCopy[6];
   if (doConnect == true) {
     if (connectToServer(*pServerAddress)) {
       Serial.println("We are now connected to the BLE Server.");
@@ -166,70 +155,70 @@ void loop() {
     doConnect = false;
   }
   if(newTemperature){
-  //if new temperature readings are available, print in the OLED
-  int i =0;
-  char hum[3];
-  char temp[5];
-  if (newTemperature){
-    Serial.print("\nTempChar");
-    while(temperatureChar[i]!='\0'){
-    Serial.print(temperatureChar[i]);
-    i++;
+    newTemperature = false;
+  
+    //the variables to be passed to ThingSpeak
+    char hum[3];
+    memset(hum,0,3);
+    char temp[5];
+    memset(temp,0,5);
+    char pressure[4];
+    memset(pressure,0,4);
+ 
+    for(int i=0;i<2;i++){
+      hum[i]=temperatureChar[i];
     }
-    Serial.print("\n");
-  }
- i =0;
- if(newTemperature){
-  newTemperature = false;
- strcpy(strCopy,temperatureChar);
- memset(hum,0,3*sizeof(char));
- memset(temp,0,4*sizeof(char));
- 
- 
-
- hum[0]=temperatureChar[0];
- hum[1]=temperatureChar[1];
- hum[2]='\0';
- temp[0]=temperatureChar[2];
- temp[1]=temperatureChar[3];
- temp[2]=temperatureChar[4];
- temp[3]=temperatureChar[5];
- temp[4]='\0';
- Serial.print("\nStrCopy");
- for(int i=0;i<7;i++){
-  Serial.print(temperatureChar[i]);
-  }
-  Serial.print("\n");
- 
+    hum[2]='\0';
+    
+    for(int i=0;i<4;i++){
+      temp[i]=temperatureChar[i+2];
+    }
+    temp[4]='\0';
+    
+    for(int i=0;i<3;i++){
+      pressure[i]=temperatureChar[i+6];
+    }
+    pressure[3]='\0';
   
     // Connect or reconnect to WiFi
-  if(WiFi.status() != WL_CONNECTED){
-    Serial.print("Attempting to connect to SSID: ");
-    Serial.println(SECRET_SSID);
-    while(WiFi.status() != WL_CONNECTED){
-      WiFi.begin(ssid, pass);  // Connect to WPA/WPA2 network. Change this line if using open or WEP network
-      Serial.print(".");
-      delay(5000);     
-    } 
-    Serial.println("\nConnected.");
-  }
-  ThingSpeak.setField(1,temp);
-  for(int i=0;i<4;i++){
-    Serial.print(temp[i]);
+    if(WiFi.status() != WL_CONNECTED){
+      Serial.print("Attempting to connect to SSID: ");
+      Serial.println(SECRET_SSID);
+      while(WiFi.status() != WL_CONNECTED){
+        WiFi.begin(ssid, pass);  // Connect to WPA/WPA2 network. Change this line if using open or WEP network
+        Serial.print(".");
+        delay(5000);     
+      } 
+      Serial.println("\nConnected.");
     }
-    Serial.print("\n");
-  ThingSpeak.setField(2, hum);
+
+    Serial.print("\n----> New Measurements <----");
+    ThingSpeak.setField(1,temp);
+    Serial.print("\nTemperature: ");
+    for(int i=0;i<4;i++){
+      Serial.print(temp[i]);
+    }
+    Serial.print(" ºC");
+    
+    ThingSpeak.setField(2, hum);
+    Serial.print("\nHumidade: ");
     for(int i=0;i<2;i++){
     Serial.print(hum[i]);
     }
-  Serial.print("\n");
+    Serial.print(" %");
+    
+    ThingSpeak.setField(3, pressure);
+    Serial.print("\nPressure: ");
+    for(int i=0;i<3;i++){
+      Serial.print(pressure[i]);
+    }
+    Serial.print(" hPa");
+    Serial.print("\n---- / / ----\n");
+    ThingSpeak.setStatus("status");
   
-    ThingSpeak.setStatus("hey");
+    // write to the ThingSpeak channel
+    int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
   
-  // write to the ThingSpeak channel
-  int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
-  
-  delay(20000); // Delay a second between loops.
- }
+    delay(20000); // Delay a second between loops.
  }
 }
