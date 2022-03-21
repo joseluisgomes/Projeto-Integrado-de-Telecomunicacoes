@@ -1,3 +1,18 @@
+#include <ETH.h>
+#include <WiFi.h>
+#include <WiFiAP.h>
+#include <WiFiClient.h>
+#include <WiFiGeneric.h>
+#include <WiFiMulti.h>
+#include <WiFiScan.h>
+#include <WiFiServer.h>
+#include <WiFiSTA.h>
+#include <WiFiType.h>
+#include <WiFiUdp.h>
+
+
+
+#include <NTPClient.h>
 #include <DHT.h>
 #include <DHT_U.h>
 #include <BLEDevice.h>
@@ -11,7 +26,17 @@
 //Sensors Defines 
 #define temperatureCelsius
 
-  //DHT
+//Time_NTP
+WiFiClient client;
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "europe.pool.ntp.org");
+
+char ssid[]= "LAP3";
+char pass[]= "LAP3LAP3";
+
+
+
+//DHT
     #define DHTPIN 17
     #define DHTTYPE DHT11
     DHT_Unified dht(DHTPIN, DHTTYPE); 
@@ -35,8 +60,7 @@ float tempF;
 float hum;
 float pressure;
  
-// Timer variables
-float startTime = millis();
+
  
 //Setup callbacks onConnect and onDisconnect
 class MyServerCallbacks: public BLEServerCallbacks {
@@ -62,7 +86,7 @@ void setup() {
   
   // Start serial communication 
     Serial.begin(115200);
-    
+    WiFi.mode(WIFI_STA);
   //Init DHT
   dht.begin();
   sensor_t sensor;
@@ -97,21 +121,46 @@ void setup() {
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pServer->getAdvertising()->start();
   Serial.println("\nWaiting a client connection to notify...");
+
+  timeClient.begin();
+  timeClient.setTimeOffset(0);
 }
- 
+
+int startTime = timeClient.getEpochTime();
+int startTime2 = timeClient.getEpochTime()-20;
+
 void loop() {
+
+  
+      
   static char tempStringC[4];
+  //timeClient.update();
+  
   if (deviceConnected) {
-    
+    if(WiFi.status() != WL_CONNECTED){
+        Serial.print("Attempting to connect to SSID: ");
+        Serial.println("LAP3");
+        while(WiFi.status() != WL_CONNECTED){
+          WiFi.begin(ssid, pass);  // Connect to WPA/WPA2 network. Change this line if using open or WEP network
+          Serial.print(".");
+          delay(5000);
+        } 
+        Serial.println("\nConnected WiFi.\n");
+      }
+      if(timeClient.getEpochTime()-startTime>=1){
+    timeClient.update();
+    String formattedTime = timeClient.getFormattedTime();
+    startTime=timeClient.getEpochTime();
     pressure = bme.readPressure()/100;
     sensors_event_t event;
     // Get temperature event and print its value.
-    Serial.print("\n----> New Measurements <----");
+    Serial.print("\n----> New Measurements <----\n");
     dht.temperature().getEvent(&event);
     if (isnan(event.temperature)) {
       Serial.println(F("Error reading temperature!"));
     }else{
-      Serial.print(F("\nTemperature: "));
+      Serial.print(formattedTime);
+      Serial.print(F(": Temperature: "));
       Serial.print(event.temperature);
       dtostrf(event.temperature,4,1,tempStringC);
       Serial.println(F("°C"));
@@ -121,12 +170,13 @@ void loop() {
     if (isnan(event.relative_humidity)) {
       Serial.println(F("Error reading humidity!"));
     }else{
-      Serial.print(F("Humidity: "));
+      Serial.print(formattedTime);
+      Serial.print(F(": Humidity: "));
       Serial.print(event.relative_humidity);
       Serial.println(F("%"));
     }
- 
-    Serial.print("Pressure: ");
+    Serial.print(formattedTime);
+    Serial.print(": Pressure: ");
     Serial.print(pressure);
     Serial.print(" hPa");
     Serial.print("\n---- / / ----\n");
@@ -166,12 +216,12 @@ void loop() {
     toSendC[1]=temporC[2];
     toSendC[9]='\0'; //need to have a terminator otherwise the compiler continues to print unallocated memory - its the devil
     
-    if(millis()-startTime>=20000){
+    if(timeClient.getEpochTime()-startTime2>=20){
+      startTime2=timeClient.getEpochTime();
      bmeCharacteristics.setValue(toSendC);
      bmeCharacteristics.notify();
-     startTime = millis();
     }
   }
-   delay(1000);
+}
 }
  
