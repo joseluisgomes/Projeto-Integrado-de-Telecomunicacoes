@@ -155,6 +155,7 @@ void loop() {
     sensors_event_t event;
     // Get temperature event and print its value.
     Serial.print("\n----> New Measurements <----\n");
+    Serial.print("Time measured in hh:mm:ss.\n");
     dht.temperature().getEvent(&event);
     if (isnan(event.temperature)) {
       Serial.println(F("Error reading temperature!"));
