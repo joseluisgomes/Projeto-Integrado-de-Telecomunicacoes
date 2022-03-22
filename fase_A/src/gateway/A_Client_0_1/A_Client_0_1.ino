@@ -212,6 +212,7 @@
       
   
       Serial.print("\n----> New Measurements <----\n");
+      Serial.print("Time measured in hh:mm:ss.\n");
       ThingSpeak.setField(1,temp);
       //timeClient.update();
       Serial.print(formattedTime); 
