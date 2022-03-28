@@ -62,6 +62,10 @@ public class Meteorology {
 
     @Override
     public int hashCode() {
+        /*
+            31 equals to a shift and subtraction, for better performance
+            on some computer architectures: 31 * i = (i << 5) - i
+         */
         int result = timeStamp.hashCode();
         result = 31 * result + Integer.hashCode(pressure);
         result = 31 * result + Double.hashCode(humidity);
