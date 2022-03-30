@@ -11,10 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.time.LocalDate;
 
-@Entity(name = "Meteorology")
+@Entity(name = "Weather")
 @Table
 @Getter @Setter
-public class Meteorology {
+public class WeatherSample {
     @Id
     @SequenceGenerator(
             name = "meteorology_id_generator",
@@ -31,17 +31,17 @@ public class Meteorology {
     private final int pressure;
     private final LocalDate timeStamp;
 
-    public Meteorology() {
+    public WeatherSample() {
         this.temperature = 0.0;
         this.humidity = 0.0;
         this.pressure = 0;
         this.timeStamp = LocalDate.now();
     }
 
-    public Meteorology(double temperature,
-                       double humidity,
-                       int pressure,
-                       LocalDate timeStamp) {
+    public WeatherSample(double temperature,
+                         double humidity,
+                         int pressure,
+                         LocalDate timeStamp) {
         this.temperature = temperature;
         this.humidity = humidity;
         this.pressure = pressure;
@@ -52,7 +52,7 @@ public class Meteorology {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof Meteorology that))
+        if (!(o instanceof WeatherSample that))
             return false;
         return that.temperature == temperature &&
                     that.humidity == humidity &&
