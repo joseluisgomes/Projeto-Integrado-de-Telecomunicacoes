@@ -1,0 +1,42 @@
+<style>
+    table.tb { border-collapse: collapse; width:300px; }
+    .tb th, .tb td { padding: 5px; border: solid 1px #777; }
+    .tb th { background-color: lightblue;}
+  </style>
+  
+  <table class="tb" id="mytable">
+    <tr>
+      <th>First name</th>
+      <th>Last name</th>
+    </tr>
+    <tr>
+      <td>Denice</td>
+      <td>Hobermann</td>
+    </tr>
+    <tr>
+      <td>Paulo</td>
+      <td>Cornell</td>
+    </tr>
+    <tr>
+      <td>Jane</td>
+      <td>Hollander</td>
+    </tr>
+  </table>
+  
+  <br />
+  <button onclick="toggle(this);">Hide table</button>
+  
+  <script>
+    let toggle = button => {
+      let element = document.getElementById("mytable");
+      let hidden = element.getAttribute("hidden");
+  
+      if (hidden) {
+         element.removeAttribute("hidden");
+         button.innerText = "Hide table";
+      } else {
+         element.setAttribute("hidden", "hidden");
+         button.innerText = "Show table";
+      }
+    }
+  </script>

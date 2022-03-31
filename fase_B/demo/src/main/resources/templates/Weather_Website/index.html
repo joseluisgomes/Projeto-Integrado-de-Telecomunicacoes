@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="icon" href="images/main_icon.png">
+<title>Projeto Integrado de Telecomunicações</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style> html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif} </style>
+</head>
+<body class="w3-light-grey">
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <span class="w3-bar-item w3-left">Meteorological Station</span>
+  <span class="w3-bar-item w3-right">PIT G2</span>
+</div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:0px;margin-top:30px;">
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> Dashboard</b></h5>
+  </header>
+
+  <div class="w3-row-padding w3-margin-bottom">
+    <div class="w3-quarter">
+      <div class="w3-container w3-red w3-padding-16">
+        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+          <h3><p id="num_samples"></p></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Samples received</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-blue w3-padding-16">
+        <div class="w3-left"><i class="fa fa-thermometer-three-quarters w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+          <h3><p id="cur_temp"></p></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Current Temperature (ºC)</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-teal w3-padding-16">
+        <div class="w3-left"><i class="fa fa-tint w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+          <h3><p id="cur_hum"></p></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Current Humidity (%)</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-light-green w3-text-white w3-padding-16">
+        <div class="w3-left"><i class="fa fa-skyatlas w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+          <h3><p id="cur_pres"></p></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Current Atmosferic Pressure (hPa)</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-panel">
+    <div class="w3-row-padding"   >
+      <div class="w3-third">
+        <h5>Station location</h5>
+        <img src="images/Distrito_de_Braga.jpg" style="width:96%">
+      </div>
+      <div class="w3-twothird">
+        <h5>Feeds</h5>
+        <table class="w3-table w3-striped w3-white">
+          <tr>
+            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td>New sample.</td>
+            <td><i><a id="update0"></a>&nbsp<a id ="string0"></a></i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td>New sample.</td>
+            <td><i><a id="update1"></a>&nbsp<a id ="string1"></a></i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td>New sample.</td>
+            <td><i><a id="update2"></a>&nbsp<a id ="string2"></a></i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td>New sample.</td>
+            <td><i><a id="update3"></a>&nbsp<a id ="string3"></a></i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td>New sample.</td>
+            <td><i><a id="update4"></a>&nbsp<a id ="string4"></a></i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td>New sample.</td>
+            <td><i><a id="update5"></a>&nbsp<a id ="string5"></a></i></td>
+          </tr>
+          <tr>
+            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td>New sample.</td>
+            <td><i><a id="update6"></a>&nbsp<a id ="string6"></a></i></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-ios-green">
+    <p>Project's <a href="https://github.com/joseluisgomes/Projeto-Integrado-de-Telecomunicacoes" target="blank">Github</a></p>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>  
+    <p>Developed by Group 2 in <i>Projeto Integrado de Telecomunicações</i> from UMinho</p>
+  </footer>
+
+  <!-- End page content -->
+</div>
+
+<script>
+  var text;
+  var temp = 0;
+  var update = [];
+  var string = [];
+
+  document.getElementById('num_samples').innerHTML = 52;
+  document.getElementById('cur_temp').innerHTML = 21;
+  document.getElementById('cur_hum').innerHTML = 80;
+  document.getElementById('cur_pres').innerHTML = 998;
+
+  for(var i = 0; i < 7; i++)
+  {
+    temp = 15 * (i + 1);
+    text = 'seconds ago';
+
+    if(temp > 60)
+    {
+      temp = (temp / 60) | 0; 
+      text = 'minute ago';
+
+      if(temp > 1)
+      {
+        text = 'minutes ago';
+      }
+
+      if(temp > 60)
+      {
+        temp = (temp / 60) | 0;
+        text = 'hours ago';
+      }
+
+      if(temp > 24)
+      {
+        temp = (temp / 24) | 0;
+        text = 'days ago';
+      }
+    }
+
+    document.getElementById('update'+ i).innerHTML = temp;
+    document.getElementById('string' + i).innerHTML = text;
+  }
+
+</script>
+</body>
+</html>
