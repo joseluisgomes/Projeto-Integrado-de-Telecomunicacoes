@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class DemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 
-		try {
+/*		try {
 			final var clientSocket = new Socket("localhost", 5000);
 			final var inputReader = new InputStreamReader(clientSocket.getInputStream());
 			final var buffer = new BufferedReader(inputReader);
@@ -52,6 +54,7 @@ public class DemoApplication {
 					clientSocket.shutdownInput();
 						clientSocket.close();
 		} catch (IOException ioException) { ioException.printStackTrace(); }
+		*/
 	}
 
 	@Bean
@@ -59,7 +62,7 @@ public class DemoApplication {
 		return args -> {
 			weatherSampleRepo.deleteAll();
 
-			/* final var timeStamp = LocalDate.of(2022, Month.MARCH, 28);
+			final var timeStamp = LocalDate.of(2022, Month.MARCH, 28);
 			final var sample1 = new WeatherSample(
 					20.0,
 					89.0,
@@ -73,8 +76,8 @@ public class DemoApplication {
 			);
 			weatherSampleRepo.saveAll(List.of(sample1, sample2));
 			weatherSampleRepo.findSampleByHumidity(89.0)
-					.ifPresent(System.out::println); */
-			weatherSampleRepo.saveAll(samples);
+					.ifPresent(System.out::println);
+			//weatherSampleRepo.saveAll(samples);
 		};
 	}
 }

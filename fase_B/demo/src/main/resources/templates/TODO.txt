@@ -1,5 +1,0 @@
-adicionar variaveis aos valores do feed (done)
-alterar texto das samples (done)
-retirar general stats (done)
-adicionar grafico (unsure whether doing this)
-alterar footer (done)

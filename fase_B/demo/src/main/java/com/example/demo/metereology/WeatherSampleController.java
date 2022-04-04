@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/group2/weather")
+@RequestMapping(path = "/api/group2/samples")
 @RequiredArgsConstructor
 public class WeatherSampleController {
     private final WeatherSampleService weatherSampleService;
 
-    @GetMapping("/samples")
+    @GetMapping
     public List<WeatherSample> getAllSamples() {
         return weatherSampleService.findAllSamples();
     }
