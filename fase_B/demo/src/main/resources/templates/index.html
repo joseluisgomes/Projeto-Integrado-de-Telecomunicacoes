@@ -4,6 +4,7 @@
 <link rel="icon" href="images/main_icon.png">
 <title>Projeto Integrado de Telecomunicações</title>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="style.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
@@ -20,10 +21,10 @@
 </div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:0px;margin-top:30px;">
+<div class="w3-main" style="margin-left:0px;margin-top:25px;">
 
   <!-- Header -->
-  <header class="w3-container" style="padding-top:22px">
+  <header class="w3-container" style="padding-top:20px">
     <h5><b><i class="fa fa-dashboard"></i> Dashboard</b></h5>
   </header>
 
@@ -71,10 +72,13 @@
   </div>
 
   <div class="w3-panel">
-    <div class="w3-row-padding"   >
+    <div class="w3-row-padding">
       <div class="w3-third">
-        <h5>Station location</h5>
-        <img src="images/Distrito_de_Braga.jpg" style="width:96%">
+        <div class="map">
+          <h5>Station location</h5>
+          <iframe width="450" height="270" id="map" src="https://maps.google.com/maps?q=Campus%20de%20Azur%C3%A9m,%20Av.%20da%20Universidade,%204800-058%20Guimar%C3%A3es&t=k&z=9&ie=UTF8&iwloc=&output=embed"></iframe>
+          <style>.map {overflow:hidden;background:none!important;}</style>
+        </div> 
       </div>
       <div class="w3-twothird">
         <h5>Feeds</h5>
@@ -115,6 +119,10 @@
             <td><i><a id="update6"></a>&nbsp<a id ="string6"></a></i></td>
           </tr>
         </table>
+        <div class="right">
+          <a href="data"> Check full data tables </a>
+        </div>
+    
       </div>
     </div>
   </div>
@@ -172,7 +180,6 @@
     document.getElementById('update'+ i).innerHTML = temp;
     document.getElementById('string' + i).innerHTML = text;
   }
-
 </script>
 </body>
 </html>
