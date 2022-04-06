@@ -75,8 +75,7 @@ public class DemoApplication {
 					timeStamp
 			);
 			weatherSampleRepo.saveAll(List.of(sample1, sample2));
-			weatherSampleRepo.findSampleByHumidity(89.0)
-					.ifPresent(System.out::println);
+			weatherSampleRepo.findAll().forEach(System.out::println);
 			//weatherSampleRepo.saveAll(samples);
 		};
 	}

@@ -13,7 +13,8 @@ import java.time.LocalDate;
 
 @Entity(name = "Weather")
 @Table
-@Getter @Setter
+@Getter
+@Setter
 public class WeatherSample {
     @Id
     @SequenceGenerator(

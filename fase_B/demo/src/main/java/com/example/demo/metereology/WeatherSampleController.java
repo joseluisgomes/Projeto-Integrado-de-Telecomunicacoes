@@ -16,9 +16,19 @@ public class WeatherSampleController {
         return weatherSampleService.findAllSamples();
     }
 
+    @GetMapping(path = "{sampleId}")
+    public WeatherSample getSampleById(@PathVariable(name = "sampleId") Long sampleId) {
+        return weatherSampleService.findSampleById(sampleId);
+    }
+
     @PostMapping
     public void saveSample(@RequestBody WeatherSample sample) {
         weatherSampleService.saveSample(sample);
+    }
+
+    @DeleteMapping(path = "{sampleId}")
+    public void removeSampleById(@PathVariable(name = "sampleId") Long sampleId) {
+        weatherSampleService.removeSampleById(sampleId);
     }
 }
 
