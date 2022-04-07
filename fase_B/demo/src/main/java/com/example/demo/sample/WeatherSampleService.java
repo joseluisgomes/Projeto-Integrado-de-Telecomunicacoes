@@ -1,4 +1,4 @@
-package com.example.demo.metereology;
+package com.example.demo.sample;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

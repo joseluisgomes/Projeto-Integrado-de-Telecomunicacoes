@@ -1,4 +1,4 @@
-package com.example.demo.metereology;
+package com.example.demo.sample;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,9 +9,12 @@ import java.util.List;
 
 public class WeatherSampleJob implements Runnable {
     private final Socket socket;
+    private final WeatherSampleRepo sampleRepo;
 
-    public WeatherSampleJob(Socket socket) {
+    public WeatherSampleJob(Socket socket,
+                            WeatherSampleRepo sampleRepo) {
         this.socket = socket;
+        this.sampleRepo = sampleRepo;
     }
 
     @Override
@@ -29,19 +32,19 @@ public class WeatherSampleJob implements Runnable {
                     double temperature = Double.parseDouble(sampleParameters.get(i));
                     double humidity = Double.parseDouble(sampleParameters.get(i + 1));
                     int pressure = Integer.parseInt(sampleParameters.get(i + 2));
-                    int month = Integer.parseInt(sampleParameters.get(i + 3)); //// TODO: CHECK THE TIMESTAMP FORMAT
+                    int month = Integer.parseInt(sampleParameters.get(i + 3)); // TODO: CHECK THE TIMESTAMP FORMAT
 
                     final var sample = new WeatherSample(
                             temperature, humidity,
                             pressure, null
                     );
+                    sampleRepo.save(sample);
                     i += 4;
                 }
             }
-            buffer.close();
+            socket.shutdownInput();
                 inputStream.close();
-                    socket.shutdownInput();
-                        socket.close();
+                    buffer.close();
         } catch (IOException ioException) { ioException.printStackTrace(); }
     }
 }

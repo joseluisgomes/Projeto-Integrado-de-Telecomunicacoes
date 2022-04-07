@@ -1,4 +1,4 @@
-package com.example.demo.metereology;
+package com.example.demo.sample;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
