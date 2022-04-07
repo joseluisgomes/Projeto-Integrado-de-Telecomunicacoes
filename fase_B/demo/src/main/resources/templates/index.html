@@ -11,14 +11,16 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style> html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif} </style>
-<style>r1 {text-align:right;}</style>
 </head>
 <body class="w3-light-grey">
 
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
   <span class="w3-bar-item w3-left">Meteorological Station</span>
-  <span class="w3-bar-item w3-right">PIT G2</span>
+  <div class="w3-bar-item w3-right">
+    <a>PIT G2&nbsp</a>
+    <a href=""><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+</div>
 </div>
 
 <!-- !PAGE CONTENT! -->
@@ -85,46 +87,44 @@
         <h5>Feeds</h5>
         <table class="w3-table w3-striped w3-white">
           <tr>
-            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
             <td>New sample.</td>
             <td><i><a id="update0"></a>&nbsp<a id ="string0"></a></i></td>
           </tr>
           <tr>
-            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
             <td>New sample.</td>
             <td><i><a id="update1"></a>&nbsp<a id ="string1"></a></i></td>
           </tr>
           <tr>
-            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
             <td>New sample.</td>
             <td><i><a id="update2"></a>&nbsp<a id ="string2"></a></i></td>
           </tr>
           <tr>
-            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
             <td>New sample.</td>
             <td><i><a id="update3"></a>&nbsp<a id ="string3"></a></i></td>
           </tr>
           <tr>
-            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
             <td>New sample.</td>
             <td><i><a id="update4"></a>&nbsp<a id ="string4"></a></i></td>
           </tr>
           <tr>
-            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
             <td>New sample.</td>
             <td><i><a id="update5"></a>&nbsp<a id ="string5"></a></i></td>
           </tr>
           <tr>
-            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
             <td>New sample.</td>
             <td><i><a id="update6"></a>&nbsp<a id ="string6"></a></i></td>
           </tr>
         </table>
         <div align="right";>
-          <a href="data"> Check full data tables </a>
-          
+          <a href="data.html"> Check full data tables </a>         
         </div>
-    
       </div>
     </div>
   </div>
@@ -136,9 +136,9 @@
     <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>  
     <p>Developed by Group 2 in <i>Projeto Integrado de Telecomunicações</i> from UMinho</p>
   </footer>
-
-  <!-- End page content -->
 </div>
+
+<!-- End page content -->
 
 <script>
   var text;

@@ -10,16 +10,22 @@
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<script data-main="libs/main" src="libs/require.js"></script>
+<script data-main="libs/main" src ="libs/require.js"></script>
+
 <style> html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif} </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="papaparse.min.js"></script>
 </head>
 
 <body class="w3-light-grey">
 <!-- Top container -->
 <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
     <span class="w3-bar-item w3-left">Meteorological Station</span>
-    <span class="w3-bar-item w3-right">PIT G2</span>
+    <div class="w3-bar-item w3-right">
+        <a>PIT G2&nbsp</a>
+        <a href=""><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+    </div>
 </div>
 
 <!-- !PAGE CONTENT! -->
@@ -29,48 +35,35 @@
     <h5><b><i class="fa fa-table"></i> Data recorded until now</b></h5>
   </header>
 
-<!-- TABLE --> <!--LATER TO BE DELETED FROM HERE-->
-<script type="text/javascript">
-  function Upload() {
-      var fileUpload = document.getElementById("fileUpload");
-      var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-      if (regex.test(fileUpload.value.toLowerCase())) {
-          if (typeof (FileReader) != "undefined") {
-              var reader = new FileReader();
-              reader.onload = function (e) {
-                  var table = document.createElement("table");
-                  var rows = e.target.result.split("\n");
-                  for (var i = 0; i < rows.length; i++) {
-                      var cells = rows[i].split(",");
-                      if (cells.length > 1) {
-                          var row = table.insertRow(-1);
-                          for (var j = 0; j < cells.length; j++) {
-                              var cell = row.insertCell(-1);
-                              cell.innerHTML = cells[j];
-                          }
-                      }
-                  }
-                  var dvCSV = document.getElementById("dvCSV");
-                  dvCSV.innerHTML = "";
-                  dvCSV.appendChild(table);
-              }
-              reader.readAsText(fileUpload.files[0]);
-          } else {
-              alert("This browser does not support HTML5.");
-          }
-      } else {
-          alert("Please upload a valid CSV file.");
-      }
-  }
-</script>
-<input type="file" id="fileUpload"/>
-<input type="button" id="upload" value="UPLOAD" onclick="Upload()" />
-
-<hr/>
-<div id="dvCSV"></div>
-
-<!--LATER TO BE DELETED UNTIL HERE, ALSO DELETE THE 2 SCRIPTS AFTER THE STYLE ATTRIBUTE IN HEAD-->
-
+  <div class="w3-panel">
+    <table class="w3-table w3-bordered w3-white ">
+        <tr>
+            <td>Timestamp</td>
+            <td>Temperature</td>
+        </tr>
+        <tr>
+            <td>07-04-2022 11:44:00</td>
+            <td>24.1 ºC</td>
+        </tr>
+        <tr>
+            <td>07-04-2022 11:44:15</td>
+            <td>24.0 ºC</td>
+        </tr>
+        <tr>
+          <td>07-04-2022 11:44:30</td>
+          <td>24.1 ºC</td>
+      </tr>
+    </table>
+    <div align="right";>
+        <a href="index.html"> Return to general view </a>         
+      </div>
+  </div>
 </div>
+
+<script>
+    
+    
+
+</script>
 </body>
 </html>
