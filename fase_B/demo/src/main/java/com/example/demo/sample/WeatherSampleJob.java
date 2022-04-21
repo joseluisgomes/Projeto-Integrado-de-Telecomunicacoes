@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-
 public class WeatherSampleJob implements Runnable {
     private final Socket socket;
     private final WeatherSampleRepo sampleRepo;
@@ -29,10 +28,10 @@ public class WeatherSampleJob implements Runnable {
             while ((parameter = buffer.readLine()) != null) {
                 sampleParameters.add(parameter);
                 if ((sampleParameters.size() % 4) == 0) {
-                    double temperature = Double.parseDouble(sampleParameters.get(i));
-                    double humidity = Double.parseDouble(sampleParameters.get(i + 1));
-                    int pressure = Integer.parseInt(sampleParameters.get(i + 2));
-                    int month = Integer.parseInt(sampleParameters.get(i + 3)); // TODO: CHECK THE TIMESTAMP FORMAT
+                    final double temperature = Double.parseDouble(sampleParameters.get(i));
+                    final double humidity = Double.parseDouble(sampleParameters.get(i + 1));
+                    final int pressure = Integer.parseInt(sampleParameters.get(i + 2));
+                    final int month = Integer.parseInt(sampleParameters.get(i + 3)); // TODO: CHECK THE TIMESTAMP FORMAT
 
                     final var sample = new WeatherSample(
                             temperature, humidity,
@@ -43,8 +42,9 @@ public class WeatherSampleJob implements Runnable {
                 }
             }
             socket.shutdownInput();
-                inputStream.close();
-                    buffer.close();
+            inputStream.close();
+            buffer.close();
+            socket.close();
         } catch (IOException ioException) { ioException.printStackTrace(); }
     }
 }
