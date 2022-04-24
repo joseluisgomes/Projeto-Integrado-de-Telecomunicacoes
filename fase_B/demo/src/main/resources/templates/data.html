@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="icon" href="images/main_icon.png">
-<title>Projeto Integrado de Telecomunicações</title>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="style.css">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<script data-main="libs/main" src="libs/require.js"></script>
-<script data-main="libs/main" src ="libs/require.js"></script>
-
-<style> html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif} </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="icon" href="images/main_icon.png">
+    <title>Projeto Integrado de Telecomunicações</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style> html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif} </style>
+    <script type="text/javascript" src="jsFunctions.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
 </head>
 
 <body class="w3-light-grey">
@@ -30,39 +27,55 @@
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:0px;margin-top:25px;">
-  <!-- Header -->
-  <header class="w3-container" style="padding-top:20px">
-    <h5><b><i class="fa fa-table"></i> Data recorded until now</b></h5>
-  </header>
+    <!-- Header -->
+    <header class="w3-container" style="padding-top:20px">
+        <h5><b><i class="fa fa-table"></i> Data recorded until now</b></h5>
+    </header>
 
-  <div class="w3-panel">
-    <table class="w3-table w3-bordered w3-white ">
-        <tr>
-            <td>Timestamp</td>
-            <td>Temperature</td>
-        </tr>
-        <tr>
-            <td>07-04-2022 11:44:00</td>
-            <td>24.1 ºC</td>
-        </tr>
-        <tr>
-            <td>07-04-2022 11:44:15</td>
-            <td>24.0 ºC</td>
-        </tr>
-        <tr>
-          <td>07-04-2022 11:44:30</td>
-          <td>24.1 ºC</td>
-      </tr>
-    </table>
-    <div align="right";>
-        <a href="index"> Return to general view </a>
-      </div>
-  </div>
+    <div class="w3-panel">
+        <div id="data-table">
+            <table id="html-data-table" style="width:100%; height:100%; text-align:center">
+                <tr>
+                    <th style="width:10%">ID</th>
+                    <th style="width:20%">Temperature</th>
+                    <th style="width:20%">Humidity</th>
+                    <th style="width:20%">Pressure</th>
+                    <th style="width:30%">Timestamp</th>
+                </tr>
+            </table>
+        </div>
+
+        <br><br>
+
+        <table id="demo"></table>
+        <div align="right";>
+            <a href="index"> Return to general view </a>
+        </div>
+    </div>
 </div>
 
-<script>
-    
-    
+<script type="text/javascript" charset="utf-8">
+
+  fetch('http://localhost:8080/api/group2/samples')
+            .then(function (response) {
+                return response.json();
+            }).then(function (getAllSamples) {
+                console.log(getAllSamples);
+                renderDataInTheTable(getAllSamples);
+            })
+
+        function renderDataInTheTable(todos) {
+            const mytable = document.getElementById("html-data-table");
+            todos.forEach(todo => {
+                let newRow = document.createElement("tr");
+                Object.values(todo).forEach((value) => {
+                    let cell = document.createElement("td");
+                    cell.innerText = value;
+                    newRow.appendChild(cell);
+                })
+                mytable.appendChild(newRow);
+            });
+        }
 
 </script>
 </body>
