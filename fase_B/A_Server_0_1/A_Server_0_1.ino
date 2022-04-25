@@ -29,11 +29,15 @@
 #define DHTTYPE DHT11
 Adafruit_BME280 bme; // I2C
 DHT_Unified dht(DHTPIN, DHTTYPE);
+clock_t begin = clock();
+char *timeArr;
+bool first=true;
 float temp;
 float tempF;
 float hum;
+float pressure;
 
-char *timeArr;
+
 
 // Timer variables
 unsigned long lastTime = 0;
@@ -75,12 +79,7 @@ void initBME(){
 
 uint32_t delayMS;
 
- static void timeNotifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, 
-                                          uint8_t* pData, size_t length, bool isNotify) {
-    //casting to char: had to do it this way, classic normal way isnt working on this compiler
-    timeArr = (char*)pData;
-    newTime = true;
-  }
+    
   
 void setup() {
   // Start serial communication 
@@ -91,7 +90,7 @@ void setup() {
   dht.humidity().getSensor(&sensor);
   delayMS = sensor.min_delay / 1000;
   // Init BME Sensor
-  //initBME();
+  initBME();
   //turn on when included
 
   // Create the BLE Device
@@ -132,6 +131,7 @@ void setup() {
 void loop() {
   static char tempStringC[4];
   if (deviceConnected) {
+    pressure = bme.readPressure()/100;
     //if ((millis() - lastTime) > timerDelay) {
       // Read temperature as Celsius (the default)
       //temp = bme.readTemperature();
@@ -147,6 +147,24 @@ void loop() {
         // Get temperature event and print its value.
         sensors_event_t event;
         dht.temperature().getEvent(&event);
+        
+      
+          
+    Serial.print("\n");
+   Serial.print("\nnew Time");
+   Serial.print((char*)timeCharacteristics.getValue().c_str());
+    Serial.print("\n");
+   Serial.print("\ntimeArr");
+   
+    timeArr=(char*)timeCharacteristics.getValue().c_str();
+    Serial.print(timeArr);
+    
+    
+   Serial.print("\n");
+  
+   
+   
+        Serial.print(timeConverter());
   if (isnan(event.temperature)) {
     Serial.println(F("Error reading temperature!"));
   }
@@ -167,26 +185,45 @@ void loop() {
     Serial.print(event.relative_humidity);
     Serial.println(F("%"));
   }
+
+ 
+    Serial.print(": Pressure: ");
+    Serial.print(pressure);
+    Serial.print(" hPa");
   
-  static char humStringC[7];
-  dtostrf(event.relative_humidity,2,0,humStringC);
+    static char humStringC[7];
+    static char pressureStringC[3];
+    static char temporC[3];
+      dtostrf(event.relative_humidity,2,0,humStringC);
+    dtostrf(event.relative_humidity,3,0,temporC);
+    dtostrf(pressure,3,0,pressureStringC);
   
-    for(int i=0;i<4;i++){
-    humStringC[i+2] = tempStringC[i] ;
+  //charArray to send to the client
+    static char toSendC[10];
+    memset(toSendC,0,10);
+    //this loop is redundant, currently for some weird reason it needs is to work; this compiler is the devil: try to fix later
+    for(int i=0;i<2;i++){
+      humStringC[i] = temporC[i] ;
     }
-    humStringC[6]='\0'; 
-    Serial.print("\n");
-    Serial.print(tempStringC[0]);
-    Serial.print(tempStringC[1]);
-    Serial.print(tempStringC[2]);
-    Serial.print(tempStringC[3]);
+    for(int i=0;i<4;i++){
+      humStringC[i+2] = tempStringC[i] ;
+    }
+   
+    for(int i=0;i<6;i++){
+      toSendC[i]=humStringC[i];
+    }
+    for(int i=0;i<3;i++){
+      toSendC[i+6]=pressureStringC[i];
+    }
+
+    //we are aware this burns one's eyes
+    toSendC[0]=temporC[1];
+    toSendC[1]=temporC[2];
+    toSendC[9]='\0'; 
 
     
-    Serial.print("\n");
-   Serial.print("\nnew Time");
-   Serial.print((char*)timeCharacteristics.getValue().c_str());
-   Serial.print("\n");
-  bmeCharacteristics.setValue(humStringC);
+   delay(1000);
+  bmeCharacteristics.setValue(toSendC);
   bmeCharacteristics.notify();
   
       /*#define temperatureCelsius
@@ -216,3 +253,42 @@ void loop() {
    // }
   }
 }
+
+String timeConverter(){
+  clock_t end = clock();
+  float time_spent = round((float)(end - begin)) / CLOCKS_PER_SEC;
+  float toAdd=atof(timeArr);
+  float timePassed = millis();
+  int timePassedDiv = (int)roundNo(timePassed/1000);
+  double currentTime = (double)timePassedDiv+(double)toAdd;
+  Serial.print("\ntoAdd");
+  Serial.print(toAdd);
+  Serial.print("\n");
+  Serial.print("\ntimeSpents");
+  Serial.print(timePassedDiv);
+  Serial.print(time_spent);
+  Serial.print("\n");
+  time_t currentTimeT = currentTime;
+    Serial.print("\ncurrentTime");
+  Serial.print(currentTime);
+  Serial.print("\n");
+  
+
+    struct tm  ts;
+    char       buf[80];
+
+    // Get current time
+ 
+
+    // Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
+    ts = *localtime(&currentTimeT);
+    strftime(buf, sizeof(buf), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
+
+  return buf;
+  }
+
+  int roundNo(float num)
+{
+    return num < 0 ? num - 0.5 : num + 0.5;
+}
+  

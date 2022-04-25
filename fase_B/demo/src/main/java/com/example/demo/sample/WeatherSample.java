@@ -10,6 +10,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name = "Weather")
 @Table
@@ -30,19 +31,19 @@ public class WeatherSample {
     private final double temperature;
     private final double humidity;
     private final int pressure;
-    private final LocalDate timeStamp;
+    private final LocalDateTime timeStamp;
 
     public WeatherSample() {
         this.temperature = 0.0;
         this.humidity = 0.0;
         this.pressure = 0;
-        this.timeStamp = LocalDate.now();
+        this.timeStamp = LocalDateTime.now();
     }
 
     public WeatherSample(double temperature,
                          double humidity,
                          int pressure,
-                         LocalDate timeStamp) {
+                         LocalDateTime timeStamp) {
         this.temperature = temperature;
         this.humidity = humidity;
         this.pressure = pressure;

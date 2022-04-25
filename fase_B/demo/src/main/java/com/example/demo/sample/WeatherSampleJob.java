@@ -4,16 +4,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class WeatherSampleJob implements Runnable {
     private final Socket socket;
-    private final WeatherSampleRepo sampleRepo;
+    private final WeatherSampleRepo repository;
+    private final Logger logger = Logger.getAnonymousLogger();
 
     public WeatherSampleJob(Socket socket,
-                            WeatherSampleRepo sampleRepo) {
+                            WeatherSampleRepo weatherSampleRepo) {
         this.socket = socket;
-        this.sampleRepo = sampleRepo;
+        this.repository = weatherSampleRepo;
     }
 
     @Override
@@ -21,26 +25,24 @@ public class WeatherSampleJob implements Runnable {
         try {
             final var inputStream = new InputStreamReader(socket.getInputStream());
             final var buffer = new BufferedReader(inputStream);
-            final List<String> sampleParameters = new ArrayList<>();
-            String parameter;
+            final var sample = buffer.readLine();
 
-            int i = 0;
-            while ((parameter = buffer.readLine()) != null) {
-                sampleParameters.add(parameter);
-                if ((sampleParameters.size() % 4) == 0) {
-                    final double temperature = Double.parseDouble(sampleParameters.get(i));
-                    final double humidity = Double.parseDouble(sampleParameters.get(i + 1));
-                    final int pressure = Integer.parseInt(sampleParameters.get(i + 2));
-                    final int month = Integer.parseInt(sampleParameters.get(i + 3)); // TODO: CHECK THE TIMESTAMP FORMAT
+            final var humidity = Double.parseDouble(sample.substring(0, 2));
+            final var temperature = Double.parseDouble(sample.substring(2, 6));
+            final var pressure = Integer.parseInt(sample.substring(6, 9));
+            final var timeStamp = LocalDateTime.now();
 
-                    final var sample = new WeatherSample(
-                            temperature, humidity,
-                            pressure, null
-                    );
-                    sampleRepo.save(sample);
-                    i += 4;
-                }
-            }
+            WeatherSample weatherSample = new WeatherSample(
+                    temperature,
+                    humidity,
+                    pressure,
+                    timeStamp
+            );
+            this.repository.save(weatherSample);
+            logger.log(Level.INFO,
+                   "SAMPLE SAVED: " + weatherSample
+            );
+
             socket.shutdownInput();
             inputStream.close();
             buffer.close();

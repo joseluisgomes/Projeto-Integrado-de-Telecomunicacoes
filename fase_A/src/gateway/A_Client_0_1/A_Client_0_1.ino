@@ -1,6 +1,4 @@
 #include <NTPClient.h>
-
-  #include <ThingSpeak.h>
   
   #include <ETH.h>
   #include <WiFi.h>
@@ -18,12 +16,12 @@
   
   #include <WiFi.h>
   #include "secrets.h"
-  #include "ThingSpeak.h" 
   char ssid[] = SECRET_SSID; 
   char pass[] = SECRET_PASS;
   int keyIndex = 0;
-  WiFiClient  client;
-  
+  const uint16_t port = 5000;
+  const char * host = "192.168.1.7";
+    
   WiFiUDP ntpUDP;
   NTPClient timeClient(ntpUDP, "europe.pool.ntp.org");
 
@@ -128,7 +126,6 @@
     //Start serial communication
     Serial.begin(115200);
     WiFi.mode(WIFI_STA);   
-    ThingSpeak.begin(client);  // Initialize ThingSpeak
     timeClient.begin();
     timeClient.setTimeOffset(0);
     Serial.println("Starting Arduino BLE Client application...");
@@ -146,9 +143,6 @@
     while (!Serial) {
       ; // wait for serial port to connect. Needed for Leonardo native USB port only
     }
-    
-    
-    
   }
 
   int startTime = timeClient.getEpochTime()-20;
@@ -166,6 +160,7 @@
         } 
         Serial.println("\nConnected WiFi.\n");
       }
+          
     timeClient.update();
     String formattedTime = timeClient.getFormattedTime();
     if(timeClient.getEpochTime()-startTime>=20){
@@ -185,7 +180,6 @@
     if(newTemperature){
       newTemperature = false;
     
-      //the variables to be passed to ThingSpeak
       char hum[3];
       memset(hum,0,3);
       char temp[5];
@@ -213,7 +207,6 @@
   
       Serial.print("\n----> New Measurements <----\n");
       Serial.print("Time measured in hh:mm:ss.\n");
-      ThingSpeak.setField(1,temp);
       //timeClient.update();
       Serial.print(formattedTime); 
       Serial.print(": Temperature: ");
@@ -222,7 +215,6 @@
       }
       Serial.print(" ºC\n");
       
-      ThingSpeak.setField(2, hum);
       //timeClient.update();
       Serial.print(formattedTime); 
       Serial.print(": Humidade: ");
@@ -231,7 +223,6 @@
       }
       Serial.print(" %\n");
       
-      ThingSpeak.setField(3, pressure);
       //timeClient.update();
       Serial.print(formattedTime); 
       Serial.print(": Pressure: ");
@@ -240,12 +231,18 @@
       }
       Serial.print(" hPa\n");
       Serial.print("\n---- / / ----\n");
-      ThingSpeak.setStatus("status");
-    
-      // write to the ThingSpeak channel
-      int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
-    
-      
+
+      WiFiClient  client;
+      if (!client.connect(host, port)) {
+        Serial.println("Connection to host failed");
+        delay(1000);
+        return;
+      }
+      Serial.println("Connected to server successful!");
+   
+      client.print(temperatureChar);  
+      Serial.println("Disconnecting...");
+      client.stop();
    }
   }
   }

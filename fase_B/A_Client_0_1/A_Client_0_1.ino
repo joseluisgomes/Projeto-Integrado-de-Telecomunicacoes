@@ -1,3 +1,5 @@
+//bilateral
+
 #include <NTPClient.h>
 
   #include <ThingSpeak.h>
@@ -33,18 +35,17 @@
   #include <BLEDevice.h>
   #include <Wire.h>
   
-  #define temperatureCelsius
+
   
   #define bleServerName "grupo_2_ESP"
   
   static BLEUUID bmeServiceUUID("1aa3d607-8465-4476-a592-40a6b0f14efb");
   
   
-  #define temperatureCelsius
+  
     //Temperature Celsius Characteristic
     static BLEUUID temperatureCharacteristicUUID("b673b689-9772-47a8-825d-51f07e9a3098");
-
-  #define timeStamp
+    
     //Time Characteristic
     static BLEUUID timeCharacteristicUUID("3a3e6d34-6a5d-4205-9b91-94ed7c92f6e1");
     
@@ -57,6 +58,7 @@
    
   //Characteristicd that we want to read
   static BLERemoteCharacteristic* temperatureCharacteristic;
+    //Characteristicd that we want to read
   static BLERemoteCharacteristic* timeCharacteristic;
   
   //Activate notify
@@ -71,7 +73,7 @@
   
   
   //Connect to the BLE Server that has the name, Service, and Characteristics
-  bool connectToServer(BLEAddress pAddress) {
+  bool connectToServer(BLEAddress pAddress) { 
      BLEClient* pClient = BLEDevice::createClient();
    
     // Connect to the remove BLE Server.
@@ -99,6 +101,7 @@
     //Assign callback functions for the Characteristics
     temperatureCharacteristic->registerForNotify(temperatureNotifyCallback);
     
+    
     return true;
   }
   
@@ -115,14 +118,16 @@
   };
    
   //When the BLE Server sends a new temperature reading with the notify property
-  static void temperatureNotifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, 
+  static void temperatureNotifyCallback(BLERemoteCharacteristic*  pBLERemoteCharacteristic, 
                                           uint8_t* pData, size_t length, bool isNotify) {
     //casting to char: had to do it this way, classic normal way isnt working on this compiler
+    Serial.print("\nentrou notify\n");
     for(int i=0;i<9;i++){
       if(pData=='\0')break;
       char stor = pData[i];
       temperatureChar[i]=stor;
       }
+      
     newTemperature = true;
   }
   
@@ -174,7 +179,7 @@
       }
     timeClient.update();
     String formattedTime = timeClient.getFormattedTime();
-    if(timeClient.getEpochTime()-startTime>=20){
+    
       timeClient.update();
       startTime=timeClient.getEpochTime();
     if (doConnect == true) {
@@ -182,16 +187,19 @@
         Serial.println("We are now connected to the BLE Server.");
         //Activate the Notify property of each Characteristic
         temperatureCharacteristic->getDescriptor(BLEUUID((uint16_t)0x2902))->writeValue((uint8_t*)notificationOn, 2, true);
+        //timeCharacteristic->getDescriptor(BLEUUID((uint16_t)0x2902))->writeValue((uint8_t*)notificationOn, 2, true);
+
+        sendTime();
         connected = true;
       } else {
         Serial.println("We have failed to connect to the server; Restart your device to scan for nearby BLE server again.");
       }
       doConnect = false;
     }
+    
     if(newTemperature){
       newTemperature = false;
-    
-      //the variables to be passed to ThingSpeak
+     //the variables to be passed to ThingSpeak
       char hum[3];
       memset(hum,0,3);
       char temp[5];
@@ -253,5 +261,33 @@
     
       
    }
+   
   }
-  }
+  void sendTime(){
+    timeClient.update();
+  String formattedTime = timeClient.getFormattedTime();
+  time_t epochTime = timeClient.getEpochTime();
+  struct tm *ptm = gmtime ((time_t *)&epochTime);
+  int monthDay=(char)ptm->tm_mday;
+  int currentMonth=(char)ptm->tm_mon+1;
+  int currentYear=(char)ptm->tm_year+1900;
+  String currentDate = String(monthDay) + "/" + String(currentMonth) + "/" + String(currentYear);
+  char epochTimeString[10];
+  
+sprintf(epochTimeString,"%d",epochTime);
+
+Serial.print("\nepochTime");
+Serial.print(epochTime);
+ Serial.print("\ndate");
+  byte pSend[10];
+  for(int i=0;i<10;i++){
+    pSend[i]=(byte)epochTimeString[i];
+    Serial.print(pSend[i]);
+    Serial.print(epochTimeString[i]);
+    }
+      
+   
+    
+   
+   timeCharacteristic ->writeValue(pSend,sizeof(pSend));
+    }
