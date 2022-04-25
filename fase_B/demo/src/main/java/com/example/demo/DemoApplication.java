@@ -28,8 +28,8 @@ public class DemoApplication {
 					new Thread(new WeatherSampleJob(attemptSocket, weatherSampleRepo))
 							.start();
 				}
-			} catch (Exception ioException) {
-				ioException.printStackTrace();
+			} catch (Exception exception) {
+				exception.printStackTrace();
 			}
 		};
 	}

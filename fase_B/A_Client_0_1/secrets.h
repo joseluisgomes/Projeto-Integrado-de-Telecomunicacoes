@@ -1,6 +1,6 @@
 // Wifi configuration 
-#define SECRET_SSID "Up" // WiFi network name
-#define SECRET_PASS "1234567890"	// WiFi password
+#define SECRET_SSID "NOS-5E84" // WiFi network name
+#define SECRET_PASS "C7NACAE6"	// WiFi password
 
 // Thingspeak configuration
 #define SECRET_CH_ID 1666665 // Channel number

@@ -1,8 +1,4 @@
-//bilateral
-
 #include <NTPClient.h>
-
-  #include <ThingSpeak.h>
   
   #include <ETH.h>
   #include <WiFi.h>
@@ -20,12 +16,12 @@
   
   #include <WiFi.h>
   #include "secrets.h"
-  #include "ThingSpeak.h" 
   char ssid[] = SECRET_SSID; 
   char pass[] = SECRET_PASS;
   int keyIndex = 0;
-  WiFiClient  client;
-  
+  const uint16_t port = 5000;
+  const char * host = "192.168.1.7";
+    
   WiFiUDP ntpUDP;
   NTPClient timeClient(ntpUDP, "europe.pool.ntp.org");
 
@@ -35,19 +31,16 @@
   #include <BLEDevice.h>
   #include <Wire.h>
   
-
+  #define temperatureCelsius
   
   #define bleServerName "grupo_2_ESP"
   
   static BLEUUID bmeServiceUUID("1aa3d607-8465-4476-a592-40a6b0f14efb");
   
   
-  
+  #define temperatureCelsius
     //Temperature Celsius Characteristic
     static BLEUUID temperatureCharacteristicUUID("b673b689-9772-47a8-825d-51f07e9a3098");
-    
-    //Time Characteristic
-    static BLEUUID timeCharacteristicUUID("3a3e6d34-6a5d-4205-9b91-94ed7c92f6e1");
     
   //Flags stating if should begin connecting and if the connection is up
   static boolean doConnect = false;
@@ -58,8 +51,6 @@
    
   //Characteristicd that we want to read
   static BLERemoteCharacteristic* temperatureCharacteristic;
-    //Characteristicd that we want to read
-  static BLERemoteCharacteristic* timeCharacteristic;
   
   //Activate notify
   const uint8_t notificationOn[] = {0x1, 0x0};
@@ -73,7 +64,7 @@
   
   
   //Connect to the BLE Server that has the name, Service, and Characteristics
-  bool connectToServer(BLEAddress pAddress) { 
+  bool connectToServer(BLEAddress pAddress) {
      BLEClient* pClient = BLEDevice::createClient();
    
     // Connect to the remove BLE Server.
@@ -90,9 +81,8 @@
    
     // Obtain a reference to the characteristics in the service of the remote BLE server.
     temperatureCharacteristic = pRemoteService->getCharacteristic(temperatureCharacteristicUUID);
-    timeCharacteristic = pRemoteService->getCharacteristic(timeCharacteristicUUID);
   
-    if (temperatureCharacteristic == nullptr || timeCharacteristic == nullptr) {
+    if (temperatureCharacteristic == nullptr) {
       Serial.print("Failed to find our characteristic UUID");
       return false;
     }
@@ -100,7 +90,6 @@
    
     //Assign callback functions for the Characteristics
     temperatureCharacteristic->registerForNotify(temperatureNotifyCallback);
-    
     
     return true;
   }
@@ -118,16 +107,14 @@
   };
    
   //When the BLE Server sends a new temperature reading with the notify property
-  static void temperatureNotifyCallback(BLERemoteCharacteristic*  pBLERemoteCharacteristic, 
+  static void temperatureNotifyCallback(BLERemoteCharacteristic* pBLERemoteCharacteristic, 
                                           uint8_t* pData, size_t length, bool isNotify) {
     //casting to char: had to do it this way, classic normal way isnt working on this compiler
-    Serial.print("\nentrou notify\n");
     for(int i=0;i<9;i++){
       if(pData=='\0')break;
       char stor = pData[i];
       temperatureChar[i]=stor;
       }
-      
     newTemperature = true;
   }
   
@@ -139,7 +126,6 @@
     //Start serial communication
     Serial.begin(115200);
     WiFi.mode(WIFI_STA);   
-    ThingSpeak.begin(client);  // Initialize ThingSpeak
     timeClient.begin();
     timeClient.setTimeOffset(0);
     Serial.println("Starting Arduino BLE Client application...");
@@ -157,9 +143,6 @@
     while (!Serial) {
       ; // wait for serial port to connect. Needed for Leonardo native USB port only
     }
-    
-    
-    
   }
 
   int startTime = timeClient.getEpochTime()-20;
@@ -177,9 +160,10 @@
         } 
         Serial.println("\nConnected WiFi.\n");
       }
+          
     timeClient.update();
     String formattedTime = timeClient.getFormattedTime();
-    
+    if(timeClient.getEpochTime()-startTime>=20){
       timeClient.update();
       startTime=timeClient.getEpochTime();
     if (doConnect == true) {
@@ -187,19 +171,15 @@
         Serial.println("We are now connected to the BLE Server.");
         //Activate the Notify property of each Characteristic
         temperatureCharacteristic->getDescriptor(BLEUUID((uint16_t)0x2902))->writeValue((uint8_t*)notificationOn, 2, true);
-        //timeCharacteristic->getDescriptor(BLEUUID((uint16_t)0x2902))->writeValue((uint8_t*)notificationOn, 2, true);
-
-        sendTime();
         connected = true;
       } else {
         Serial.println("We have failed to connect to the server; Restart your device to scan for nearby BLE server again.");
       }
       doConnect = false;
     }
-    
     if(newTemperature){
       newTemperature = false;
-     //the variables to be passed to ThingSpeak
+    
       char hum[3];
       memset(hum,0,3);
       char temp[5];
@@ -227,7 +207,6 @@
   
       Serial.print("\n----> New Measurements <----\n");
       Serial.print("Time measured in hh:mm:ss.\n");
-      ThingSpeak.setField(1,temp);
       //timeClient.update();
       Serial.print(formattedTime); 
       Serial.print(": Temperature: ");
@@ -236,7 +215,6 @@
       }
       Serial.print(" ºC\n");
       
-      ThingSpeak.setField(2, hum);
       //timeClient.update();
       Serial.print(formattedTime); 
       Serial.print(": Humidade: ");
@@ -245,7 +223,6 @@
       }
       Serial.print(" %\n");
       
-      ThingSpeak.setField(3, pressure);
       //timeClient.update();
       Serial.print(formattedTime); 
       Serial.print(": Pressure: ");
@@ -254,40 +231,18 @@
       }
       Serial.print(" hPa\n");
       Serial.print("\n---- / / ----\n");
-      ThingSpeak.setStatus("status");
-    
-      // write to the ThingSpeak channel
-      int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
-    
-      
-   }
-   
-  }
-  void sendTime(){
-    timeClient.update();
-  String formattedTime = timeClient.getFormattedTime();
-  time_t epochTime = timeClient.getEpochTime();
-  struct tm *ptm = gmtime ((time_t *)&epochTime);
-  int monthDay=(char)ptm->tm_mday;
-  int currentMonth=(char)ptm->tm_mon+1;
-  int currentYear=(char)ptm->tm_year+1900;
-  String currentDate = String(monthDay) + "/" + String(currentMonth) + "/" + String(currentYear);
-  char epochTimeString[10];
-  
-sprintf(epochTimeString,"%d",epochTime);
 
-Serial.print("\nepochTime");
-Serial.print(epochTime);
- Serial.print("\ndate");
-  byte pSend[10];
-  for(int i=0;i<10;i++){
-    pSend[i]=(byte)epochTimeString[i];
-    Serial.print(pSend[i]);
-    Serial.print(epochTimeString[i]);
-    }
-      
+      WiFiClient  client;
+      if (!client.connect(host, port)) {
+        Serial.println("Connection to host failed");
+        delay(1000);
+        return;
+      }
+      Serial.println("Connected to server successful!");
    
-    
-   
-   timeCharacteristic ->writeValue(pSend,sizeof(pSend));
-    }
+      client.print(temperatureChar);  
+      Serial.println("Disconnecting...");
+      client.stop();
+   }
+  }
+  }
