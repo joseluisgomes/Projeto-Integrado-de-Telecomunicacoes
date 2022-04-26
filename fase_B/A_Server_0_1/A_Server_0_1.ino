@@ -31,17 +31,13 @@ Adafruit_BME280 bme; // I2C
 DHT_Unified dht(DHTPIN, DHTTYPE);
 clock_t begin = clock();
 char *timeArr;
+
 bool first=true;
 float temp;
 float tempF;
 float hum;
 float pressure;
-
-
-
-// Timer variables
-unsigned long lastTime = 0;
-unsigned long timerDelay = 30000;
+float startTime = millis();
 
 boolean newTime = false;
 
@@ -77,7 +73,7 @@ void initBME(){
   }
 }
 
-uint32_t delayMS;
+
 
     
   
@@ -88,11 +84,10 @@ void setup() {
   sensor_t sensor;
   dht.temperature().getSensor(&sensor);
   dht.humidity().getSensor(&sensor);
-  delayMS = sensor.min_delay / 1000;
   // Init BME Sensor
   initBME();
   //turn on when included
-
+  timeArr = "0";
   // Create the BLE Device
   BLEDevice::init(bleServerName);
 
@@ -131,49 +126,32 @@ void setup() {
 void loop() {
   static char tempStringC[4];
   if (deviceConnected) {
+    if(millis()-startTime>=1000){
+      startTime=millis();
     pressure = bme.readPressure()/100;
-    //if ((millis() - lastTime) > timerDelay) {
-      // Read temperature as Celsius (the default)
-      //temp = bme.readTemperature();
-      // Fahrenheit
-      //tempF = 1.8*temp +32;
-      // Read humidity
-      //hum = bme.readHumidity();
-  
-      //Notify temperature reading from BME sensor
-
-        // Delay between measurements.
-        delay(delayMS);
-        // Get temperature event and print its value.
         sensors_event_t event;
         dht.temperature().getEvent(&event);
         
       
-          
-    Serial.print("\n");
-   Serial.print("\nnew Time");
-   Serial.print((char*)timeCharacteristics.getValue().c_str());
-    Serial.print("\n");
-   Serial.print("\ntimeArr");
-   
+    
     timeArr=(char*)timeCharacteristics.getValue().c_str();
-    Serial.print(timeArr);
+
     
     
    Serial.print("\n");
   
    
    
-        Serial.print(timeConverter());
+  Serial.print(timeConverter());
   if (isnan(event.temperature)) {
     Serial.println(F("Error reading temperature!"));
   }
   else {
-    Serial.print(F("Temperature: "));
+    Serial.print(F(" Temperature: "));
     Serial.print(event.temperature);
     
     dtostrf(event.temperature,4,1,tempStringC);
-    Serial.println(F("°C"));
+    Serial.print(F(" °C;"));
   }
   // Get humidity event and print its value.
   dht.humidity().getEvent(&event);
@@ -181,15 +159,15 @@ void loop() {
     Serial.println(F("Error reading humidity!"));
   }
   else {
-    Serial.print(F("Humidity: "));
+    Serial.print(F(" Humidity: "));
     Serial.print(event.relative_humidity);
-    Serial.println(F("%"));
+    Serial.print(F(" %;"));
   }
 
  
-    Serial.print(": Pressure: ");
+    Serial.print("Pressure: ");
     Serial.print(pressure);
-    Serial.print(" hPa");
+    Serial.print(" hPa.");
   
     static char humStringC[7];
     static char pressureStringC[3];
@@ -222,35 +200,10 @@ void loop() {
     toSendC[9]='\0'; 
 
     
-   delay(1000);
   bmeCharacteristics.setValue(toSendC);
   bmeCharacteristics.notify();
-  
-      /*#define temperatureCelsius
-        static char tempC[6];
-        static char humC[6];
-        dtostrf(temp, 6, 2, tempC);
-        dtostrf(hum, 6, 2, humC);
-        static char toSendC[12];
-        strcat(toSendC,tempC);
-        strcat(toSendC,humC);
-      
-         
-        //Set temperature Characteristic value and notify connected client
-        //gotta send humidity
-        //bmeCharacteristics.setValue(toSendC);
-        //bmeCharacteristics.notify();
-        
-        Serial.print("Temperature Celsius: ");
-        Serial.print(temp);
-        Serial.print(" ºC");
-        Serial.print(" - Humidity: ");
-        Serial.print(hum);
-        Serial.println(" %");
-      
-      lastTime = millis();
-      */   
-   // }
+  Serial.print("\n ---> Sent to Gateway <--- \n");
+    }
   }
 }
 
@@ -261,18 +214,7 @@ String timeConverter(){
   float timePassed = millis();
   int timePassedDiv = (int)roundNo(timePassed/1000);
   double currentTime = (double)timePassedDiv+(double)toAdd;
-  Serial.print("\ntoAdd");
-  Serial.print(toAdd);
-  Serial.print("\n");
-  Serial.print("\ntimeSpents");
-  Serial.print(timePassedDiv);
-  Serial.print(time_spent);
-  Serial.print("\n");
   time_t currentTimeT = currentTime;
-    Serial.print("\ncurrentTime");
-  Serial.print(currentTime);
-  Serial.print("\n");
-  
 
     struct tm  ts;
     char       buf[80];
@@ -282,7 +224,7 @@ String timeConverter(){
 
     // Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
     ts = *localtime(&currentTimeT);
-    strftime(buf, sizeof(buf), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
+    strftime(buf, sizeof(buf), "%a %Y-%m-%d %Hhh:%Mmm:%Sss %Z", &ts);
 
   return buf;
   }
