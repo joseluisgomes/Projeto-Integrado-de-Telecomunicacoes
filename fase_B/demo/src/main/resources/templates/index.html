@@ -141,7 +141,7 @@
 <!-- End page content -->
 
 <script>
-  fetch('http://localhost:8080/api/group2/samples')
+  fetch('http://localhost:8080/api/group2/samples') //fetch of all samples
             .then(function (response) {
                 return response.json();
             }).then(function (getAllSamples) {
@@ -149,18 +149,15 @@
                 parseData(getAllSamples);
             })
 
-  function parseData(samples){
-    //samples = '[{"id":1,"temperature":20,"humidity":89,"pressure":300,"timeStamp":"2022-03-28"},{"id":2,"temperature":24.5,"humidity":89,"pressure":300,"timeStamp":"2022-03-28"}]';
+  function parseData(samples){ //function to parse the samples
+    samples = JSON.stringify(samples); //samples are converted to JSON
 
-    samples = JSON.stringify(samples);
-
-    lastSample = JSON.parse(samples);
+    lastSample = JSON.parse(samples); //JSON samples are then parsed in order to find the last sample
     lastSample = lastSample[lastSample.length - 1];
     displaySample(lastSample);
   }
 
-  function displaySample(sample){
-
+  function displaySample(sample){ //function to display the last sample on each respective space
     var text;
     var temp = 0;
     var update = [];
@@ -171,9 +168,9 @@
     document.getElementById('cur_hum').innerHTML = lastSample.humidity;
     document.getElementById('cur_pres').innerHTML = lastSample.pressure;
 
-    for(var i = 0; i < 7; i++)
+    for(var i = 0; i < 7; i++) //function to prepare feature for the next phase
     {
-      temp = 15 * (i + 1);
+      temp = 1 * (i + 1);
       text = 'seconds ago';
 
       if(temp > 60)
