@@ -20,8 +20,11 @@
   char pass[] = SECRET_PASS;
   int keyIndex = 0;
    const uint16_t port = 5000;
-  const char * host = "192.168.1.7";
-    
+  const char * host = "192.168.1.102";
+char epochString[10];
+  bool first = true;
+    String formattedTime;
+    clock_t begin = clock();
   WiFiClient  client;
   
   WiFiUDP ntpUDP;
@@ -185,8 +188,9 @@
       }
       doConnect = false;
     }
-        timeClient.update();      startTime=timeClient.getEpochTime();
-    String formattedTime = timeClient.getFormattedTime();
+        
+        if(first){timeClient.update();      startTime=timeClient.getEpochTime();
+    formattedTime = timeClient.getFormattedTime();
     timeClient.update();
   formattedTime = timeClient.getFormattedTime();
   time_t epochTime = timeClient.getEpochTime();
@@ -196,7 +200,7 @@
   int currentYear=(char)ptm->tm_year+1900;
   String currentDate = String(monthDay) + "/" + String(currentMonth) + "/" + String(currentYear);
   
-  char epochString[10];  
+  
   sprintf(epochString,"%d",epochTime);
   byte pSend[10];
   for(int i=0;i<10;i++){
@@ -204,13 +208,14 @@
 
   }
   
-
+   formattedTime = timeConverter();
   
     
    timeCharacteristic ->writeValue(pSend,sizeof(pSend));
     
       timeClient.update();
-
+      first = false;
+        }
     if(newTemperature){
       newTemperature = false;
      //the variables to be passed to ThingSpeak
@@ -241,8 +246,7 @@
       Serial.print("\n----> New Measurements <----\n");
       
       //timeClient.update();
-      Serial.print(formattedTime);
-      Serial.print(" hh:mm:ss --> ");
+      Serial.print(timeConverter());
       Serial.print("Temperature: ");
       for(int i=0;i<4;i++){
         Serial.print(temp[i]);
@@ -264,17 +268,45 @@
       Serial.print(" hPa.\n");
       Serial.print("\n---- / / ----\n");
 
-     WiFiClient  client;
-      if (!client.connect(host, port)) {
+     WiFiClient  client2;
+      if (!client2.connect(host, port)) {
         Serial.println("Connection to host failed");
-        delay(1000);
+        
         return;
       }
       Serial.println("Connected to server successful!");
    
-      client.print(temperatureChar);  
+      client2.print(temperatureChar);  
       Serial.println("Disconnecting...");
-      client.stop();
+      client2.stop();
       
    }
+   
   }
+
+  String timeConverter(){
+  clock_t end = clock();
+  float time_spent = round((float)(end - begin)) / CLOCKS_PER_SEC;
+  float toAdd=atof(epochString);
+  float timePassed = millis();
+  int timePassedDiv = (int)roundNo(timePassed/1000);
+  double currentTime = ((double)timePassedDiv+(double)toAdd)+3600;
+  time_t currentTimeT = currentTime;
+
+    struct tm  ts;
+    char       buf[80];
+
+    // Get current time
+ 
+
+    // Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
+    ts = *localtime(&currentTimeT);
+    strftime(buf, sizeof(buf), "%a %Y-%m-%d %Hh:%Mm:%Ss %Z", &ts);
+
+  return buf;
+  }
+
+  int roundNo(float num)
+{
+    return num < 0 ? num - 0.5 : num + 0.5;
+}
