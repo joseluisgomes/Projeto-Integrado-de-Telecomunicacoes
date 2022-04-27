@@ -56,15 +56,15 @@
 
 <script type="text/javascript" charset="utf-8">
 
-  fetch('http://localhost:8080/api/group2/samples')
+  fetch('http://localhost:8080/api/group2/samples') //fetch of all samples
             .then(function (response) {
                 return response.json();
             }).then(function (getAllSamples) {
-                console.log(getAllSamples);
+                //console.log(getAllSamples);
                 renderDataInTheTable(getAllSamples);
             })
 
-        function renderDataInTheTable(todos) {
+        function renderDataInTheTable(todos) { //function to update dynamic table depending on the number of samples
             const mytable = document.getElementById("html-data-table");
             todos.forEach(todo => {
                 let newRow = document.createElement("tr");
@@ -76,7 +76,6 @@
                 mytable.appendChild(newRow);
             });
         }
-
 </script>
 </body>
 </html>
