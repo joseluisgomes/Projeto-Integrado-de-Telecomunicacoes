@@ -213,7 +213,7 @@ String timeConverter(){
   float toAdd=atof(timeArr);
   float timePassed = millis();
   int timePassedDiv = (int)roundNo(timePassed/1000);
-  double currentTime = (double)timePassedDiv+(double)toAdd;
+  double currentTime = ((double)timePassedDiv+(double)toAdd)+3600;
   time_t currentTimeT = currentTime;
 
     struct tm  ts;
@@ -224,7 +224,7 @@ String timeConverter(){
 
     // Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
     ts = *localtime(&currentTimeT);
-    strftime(buf, sizeof(buf), "%a %Y-%m-%d %Hhh:%Mmm:%Sss %Z", &ts);
+    strftime(buf, sizeof(buf), "%a %Y-%m-%d %Hh:%Mm:%Ss %Z", &ts);
 
   return buf;
   }
