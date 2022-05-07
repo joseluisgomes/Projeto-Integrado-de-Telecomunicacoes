@@ -4,28 +4,24 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity(name = "Weather")
+@IdClass(value = WeatherSample.class)
 @Table
 @Getter
 @Setter
-public class WeatherSample {
+public class WeatherSample implements Serializable {
     @Id
-    @SequenceGenerator(
-            name = "meteorology_id_generator",
-            sequenceName = "meteorology_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "meteorology_id_generator"
-    )
-    private Long id;
+    private Long gatewayID;
+    @Id
+    private Long sampleID;
     private final double temperature;
     private final double humidity;
     private final int pressure;
     private final LocalDateTime timeStamp;
+    private static long counter = 1; // Sample counter
 
     public WeatherSample() {
         this.temperature = 0.0;
@@ -34,10 +30,13 @@ public class WeatherSample {
         this.timeStamp = LocalDateTime.now();
     }
 
-    public WeatherSample(double temperature,
+    public WeatherSample(Long gatewayID,
+                         double temperature,
                          double humidity,
                          int pressure,
                          LocalDateTime timeStamp) {
+        this.gatewayID = gatewayID;
+        this.sampleID = WeatherSample.counter++;
         this.temperature = temperature;
         this.humidity = humidity;
         this.pressure = pressure;
@@ -71,8 +70,9 @@ public class WeatherSample {
 
     @Override
     public String toString() {
-        return "Meteorology{" +
-                "id=" + id +
+        return "WeatherSample{" +
+                "gatewayID=" + gatewayID +
+                ", sampleID=" + sampleID +
                 ", temperature=" + temperature +
                 ", humidity=" + humidity +
                 ", pressure=" + pressure +

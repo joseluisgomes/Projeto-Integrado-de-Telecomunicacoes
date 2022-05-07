@@ -1,205 +1,286 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="icon" href="images/main_icon.png">
-<title>Projeto Integrado de Telecomunicações</title>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="style.css">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style> html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif} </style>
+  <meta charset="UTF-8">
+  <link rel="icon" href="images/main_icon.png">
+  <title>Projeto Integrado de Telecomunicações</title>
+
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    .col-container {display:flex; width: 100%;}
+    .col {flex:1; padding: 8px;}
+    .map {overflow:hidden;background:none!important;}
+  </style>
 </head>
+
 <body class="w3-light-grey">
 
 <!-- Top container -->
-<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-  <span class="w3-bar-item w3-left">Meteorological Station</span>
-  <div class="w3-bar-item w3-right">
-    <a>PIT G2&nbsp</a>
-    <a href=""><i class="fa fa-sign-out" aria-hidden="true"></i></a>
-</div>
-</div>
-
-<!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:0px;margin-top:25px;">
-
-  <!-- Header -->
-  <header class="w3-container" style="padding-top:20px">
-    <h5><b><i class="fa fa-dashboard"></i> Dashboard</b></h5>
-  </header>
-
-  <div class="w3-row-padding w3-margin-bottom">
-    <div class="w3-quarter">
-      <div class="w3-container w3-red w3-padding-16">
-        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge" aria-hidden="true"></i></div>
-        <div class="w3-right">
-          <h3><p id="num_samples"></p></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Samples received</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-blue w3-padding-16">
-        <div class="w3-left"><i class="fa fa-thermometer-three-quarters w3-xxxlarge" aria-hidden="true"></i></div>
-        <div class="w3-right">
-          <h3><p id="cur_temp"></p></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Current Temperature (ºC)</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-teal w3-padding-16">
-        <div class="w3-left"><i class="fa fa-tint w3-xxxlarge" aria-hidden="true"></i></div>
-        <div class="w3-right">
-          <h3><p id="cur_hum"></p></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Current Humidity (%)</h4>
-      </div>
-    </div>
-    <div class="w3-quarter">
-      <div class="w3-container w3-light-green w3-text-white w3-padding-16">
-        <div class="w3-left"><i class="fa fa-skyatlas w3-xxxlarge" aria-hidden="true"></i></div>
-        <div class="w3-right">
-          <h3><p id="cur_pres"></p></h3>
-        </div>
-        <div class="w3-clear"></div>
-        <h4>Current Atmosferic Pressure (hPa)</h4>
-      </div>
-    </div>
+  <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+    <span class="w3-bar-item w3-left">Meteorological Station</span>
+    <div class="w3-bar-item w3-right">
+      <a>PIT G2&nbsp</a>
+      <a href=""><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+  </div>
   </div>
 
-  <div class="w3-panel">
-    <div class="w3-row-padding">
-      <div class="w3-third">
-        <div class="map">
-          <h5>Station location</h5>
-          <iframe width="450" height="270" id="map" src="https://maps.google.com/maps?q=Campus%20de%20Azur%C3%A9m,%20Av.%20da%20Universidade,%204800-058%20Guimar%C3%A3es&t=k&z=9&ie=UTF8&iwloc=&output=embed"></iframe>
-          <style>.map {overflow:hidden;background:none!important;}</style>
-        </div> 
+<!-- !PAGE CONTENT! -->
+  <div class="w3-main" style="margin-left:0px;margin-top:25px;">
+
+    <!-- Header -->
+    <header class="w3-container" style="padding-top:18px">
+      <h5><b><i class="fa fa-dashboard"></i> Dashboard</b></h5>
+    </header>
+
+    <div class="w3-row-padding w3-margin-bottom">
+      <div class="w3-quarter">
+        <div class="w3-container w3-red w3-padding-16">
+          <div class="w3-left"><i class="fa fa-comment w3-xxxlarge" aria-hidden="true"></i></div>
+          <div class="w3-right">
+            <h3><p id="num_samples"></p></h3>
+          </div>
+          <div class="w3-clear"></div>
+          <h4>Number of samples received</h4>
+        </div>
       </div>
-      <div class="w3-twothird">
-        <h5>Feeds</h5>
-        <table class="w3-table w3-striped w3-white">
-          <tr>
-            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
-            <td>New sample.</td>
-            <td><i><a id="update0"></a>&nbsp<a id ="string0"></a></i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
-            <td>New sample.</td>
-            <td><i><a id="update1"></a>&nbsp<a id ="string1"></a></i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
-            <td>New sample.</td>
-            <td><i><a id="update2"></a>&nbsp<a id ="string2"></a></i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
-            <td>New sample.</td>
-            <td><i><a id="update3"></a>&nbsp<a id ="string3"></a></i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
-            <td>New sample.</td>
-            <td><i><a id="update4"></a>&nbsp<a id ="string4"></a></i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
-            <td>New sample.</td>
-            <td><i><a id="update5"></a>&nbsp<a id ="string5"></a></i></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-bell w3-text-amber w3-large"></i></td>
-            <td>New sample.</td>
-            <td><i><a id="update6"></a>&nbsp<a id ="string6"></a></i></td>
-          </tr>
-        </table>
-        <div align="right";>
+      <div class="w3-quarter">
+        <div class="w3-container w3-blue w3-padding-16">
+          <div class="w3-left"><i class="fa fa-thermometer-three-quarters w3-xxxlarge" aria-hidden="true"></i></div>
+          <div class="w3-right">
+            <h3><p id="cur_temp"></p></h3>
+          </div>
+          <div class="w3-clear"></div>
+          <h4>Current Temperature</h4>
+        </div>
+      </div>
+      <div class="w3-quarter">
+        <div class="w3-container w3-teal w3-padding-16">
+          <div class="w3-left"><i class="fa fa-tint w3-xxxlarge" aria-hidden="true"></i></div>
+          <div class="w3-right">
+            <h3><p id="cur_hum"></p></h3>
+          </div>
+          <div class="w3-clear"></div>
+          <h4>Current Humidity</h4>
+        </div>
+      </div>
+      <div class="w3-quarter">
+        <div class="w3-container w3-light-green w3-text-white w3-padding-16">
+          <div class="w3-left"><i class="fa fa-skyatlas w3-xxxlarge" aria-hidden="true"></i></div>
+          <div class="w3-right">
+            <h3><p id="cur_pres"></p></h3>
+          </div>
+          <div class="w3-clear"></div>
+          <h4>Current Atmosferic Pressure</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTAINER WITH MAP & GRAPHS-->
+    <div class="col-container">
+      <div class="col">
+        <h5>Station location</h5>
+        <iframe id="map" width=100% height=85% src="https://maps.google.com/maps?q=Campus%20de%20Azur%C3%A9m,%20Av.%20da%20Universidade,%204800-058%20Guimar%C3%A3es&t=k&z=9&ie=UTF8&iwloc=&output=embed"></iframe>
+      </div>
+
+      <div class="col">
+        <div class="col-container">
+          <div class="col">
+            <h5>Feeds</h5>
+          </div>
+          <div class="col">
+            <button id="btn-next" class="w3-right" onclick="nextGraph()">next</button>
+            <button id="btn-prev" class="w3-right" onclick="prevGraph()" style="margin-right:1px">prev</button>
+          </div>
+        </div>
+
+        <canvas id="temp_graph" class="canvas" style="width:100%"></canvas>
+        <div class="w3-right";>
           <a href="data"> Check full data tables </a>
         </div>
       </div>
     </div>
-  </div>
-  <hr>
 
-  <!-- Footer -->
-  <footer class="w3-container w3-ios-green">
-    <p>Project's <a href="https://github.com/joseluisgomes/Projeto-Integrado-de-Telecomunicacoes" target="blank">Github</a></p>
-    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>  
-    <p>Developed by Group 2 in <i>Projeto Integrado de Telecomunicações</i> from UMinho</p>
-  </footer>
-</div>
+    <br>
+
+    <!-- Footer -->
+    <footer class="w3-container w3-ios-green">
+      <p>Project's <a href="https://github.com/joseluisgomes/Projeto-Integrado-de-Telecomunicacoes" target="blank">Github</a></p>
+      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+      <p>Developed by Group 2 in <i>Projeto Integrado de Telecomunicações</i> from UMinho</p>
+    </footer>
+  </div>
 
 <!-- End page content -->
 
 <script>
-  fetch('http://localhost:8080/api/group2/samples') //fetch of all samples
-            .then(function (response) {
-                return response.json();
-            }).then(function (getAllSamples) {
-                //console.log(getAllSamples);
-                parseData(getAllSamples);
-            })
+  setInterval(main,1000);
 
-  function parseData(samples){ //function to parse the samples
-    samples = JSON.stringify(samples); //samples are converted to JSON
+  function main(){
+      fetch('http://localhost:8080/api/group2/samples')
+        .then(function (response) {
+          return response.json();
+      }).then(function (apiJsonData) {
+          samples = parseData(apiJsonData);
+          lastSample = getLastSample(samples);
+          displaySample(lastSample);
+          drawGraph(samples,lastSample);
+      })
+    }
 
-    lastSample = JSON.parse(samples); //JSON samples are then parsed in order to find the last sample
-    lastSample = lastSample[lastSample.length - 1];
-    displaySample(lastSample);
-  }
+  function parseData(samples){
+      samples = JSON.stringify(samples);
+      samples = JSON.parse(samples);
+      return samples;
+    }
 
-  function displaySample(sample){ //function to display the last sample on each respective space
-    var text;
-    var temp = 0;
-    var update = [];
-    var string = [];
+    function getLastSample(samples){
+      lastSample = samples[samples.length - 1];
+      return lastSample;
+    }
 
-    document.getElementById('num_samples').innerHTML = lastSample.id;
-    document.getElementById('cur_temp').innerHTML = lastSample.temperature;
-    document.getElementById('cur_hum').innerHTML = lastSample.humidity;
-    document.getElementById('cur_pres').innerHTML = lastSample.pressure;
+    function displaySample(lastSample){
+      document.getElementById('num_samples').innerHTML = lastSample.sampleID;
+      document.getElementById('cur_temp').innerHTML = lastSample.temperature + ' ºC';
+      document.getElementById('cur_hum').innerHTML = lastSample.humidity + ' %';
+      document.getElementById('cur_pres').innerHTML = lastSample.pressure + ' hPa';
+      return 0;
+    }
 
-    for(var i = 0; i < 7; i++) //function to prepare feature for the next phase
-    {
-      temp = 1 * (i + 1);
-      text = 'seconds ago';
+    function drawGraph(samples,lastSample){
+      let idValues = [];
+      let tempValues = [];
+      let humValues = [];
+      let presValues = [];
 
-      if(temp > 60)
-      {
-        temp = (temp / 60) | 0;
-        text = 'minute ago';
+      for(i = 0; i < lastSample.sampleID; i++){;
+        let value_id = samples[i].sampleID;
+        let value_temp = samples[i].temperature;
+        let value_hum = samples[i].humidity;
+        let value_pres = samples[i].pressure;
 
-        if(temp > 1)
-        {
-          text = 'minutes ago';
-        }
-
-        if(temp > 60)
-        {
-          temp = (temp / 60) | 0;
-          text = 'hours ago';
-        }
-
-        if(temp > 24)
-        {
-          temp = (temp / 24) | 0;
-          text = 'days ago';
-        }
+        idValues.push(value_id);
+        tempValues.push(value_temp);
+        humValues.push(value_hum);
+        presValues.push(value_pres);
       }
 
-      document.getElementById('update'+ i).innerHTML = temp;
-      document.getElementById('string' + i).innerHTML = text;
+      const collection = document.getElementsByTagName("canvas");
+      var tag = collection[0].id;
+
+      if(tag == 'temp_graph'){
+        drawTempGraph(idValues,tempValues);
+      }
+
+      else if(tag == 'hum_graph'){
+        drawHumGraph(idValues,humValues);
+      }
+
+      else if(tag == 'pres_graph'){
+        drawPresGraph(idValues,presValues);
+      }
     }
-  }
+
+    function drawTempGraph(idValues,tempValues) {
+      new Chart("temp_graph", {
+        type: "line",
+        data: {
+          labels: idValues,
+          datasets: [{
+            fill:true,
+            lineTension:0,
+            label:"Temperature in ºC",
+            backgroundColor: "rgb(33,150,243)",
+            borderColor:"rgb(255,255,255)",
+            data: tempValues
+          }]
+        },
+        options: {
+          legend: { display: true },
+          scales: { yAxes: [{ticks: {min: 0, max:40}}] }
+        }
+      });
+    }
+
+    function drawHumGraph(idValues,humValues) {
+      new Chart("hum_graph", {
+        type: "line",
+        data: {
+          labels: idValues,
+          datasets: [{
+            fill:true,
+            lineTension:0,
+            label:"Humidity in %",
+            backgroundColor: "rgb(0,150,136)",
+            borderColor:"rgb(255,255,255)",
+            data: humValues
+          }]
+        },
+        options: {
+          legend: { display: true },
+          scales: { yAxes: [{ticks: {min: 0, max:100}}] }
+        }
+      });
+    }
+
+    function drawPresGraph(idValues,presValues) {
+      new Chart("pres_graph", {
+        type: "line",
+        data: {
+          labels: idValues,
+          datasets: [{
+            fill:true,
+            lineTension:0,
+            label:"Atmosferic Pressure in hPa",
+            backgroundColor: "rgb(139,195,74)",
+            borderColor:"rgb(255,255,255)",
+            data: presValues
+          }]
+        },
+        options: {
+          legend: { display:true },
+          scales: { yAxes: [{ticks: {min: 0, max:1000}}] }
+        }
+      });
+    }
+
+    function nextGraph(){
+      const collection = document.getElementsByTagName("canvas");
+      var tag = collection[0].id;
+
+      if(tag == 'temp_graph'){
+        document.getElementById(tag).id = 'hum_graph';
+      }
+      else if(tag == 'hum_graph'){
+        document.getElementById(tag).id = 'pres_graph';
+      }
+      else if(tag == 'pres_graph'){
+        document.getElementById(tag).id = 'temp_graph';
+      }
+    }
+
+    function prevGraph(){
+      const collection = document.getElementsByTagName("canvas");
+      var tag = collection[0].id;
+
+      if(tag == 'temp_graph'){
+        document.getElementById(tag).id = 'pres_graph';
+      }
+      else if(tag == 'hum_graph'){
+        document.getElementById(tag).id = 'temp_graph';
+      }
+      else if(tag == 'pres_graph'){
+        document.getElementById(tag).id = 'hum_graph';
+      }
+    }
 </script>
 </body>
 </html>

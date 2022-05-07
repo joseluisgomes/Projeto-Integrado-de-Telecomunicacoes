@@ -1,81 +1,114 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <link rel="icon" href="images/main_icon.png">
     <title>Projeto Integrado de Telecomunicações</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style> html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif} </style>
-    <script type="text/javascript" src="jsFunctions.js"></script>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
+    <style>
+        html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+        .col-container {display:flex; width: 50%;}
+        .col {flex:1; padding: 16px;}
+        table{
+            border-collapse:collapse;
+            width:100%;
+        }
+
+        td,th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding:8px;
+        }
+
+        tr:nth-child(even){
+            background-color:#dddddd;
+        }
+
+        tr:hover{
+            background-color:#d6eeee;
+        }
+    </style>
 </head>
 
 <body class="w3-light-grey">
 <!-- Top container -->
-<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
-    <span class="w3-bar-item w3-left">Meteorological Station</span>
-    <div class="w3-bar-item w3-right">
-        <a>PIT G2&nbsp</a>
-        <a href=""><i class="fa fa-sign-out" aria-hidden="true"></i></a>
-    </div>
-</div>
-
-<!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:0px;margin-top:25px;">
-    <!-- Header -->
-    <header class="w3-container" style="padding-top:20px">
-        <h5><b><i class="fa fa-table"></i> Data recorded until now</b></h5>
-    </header>
-
-    <div class="w3-panel">
-        <div id="data-table">
-            <table id="html-data-table" style="width:100%; height:100%; text-align:center">
-                <tr>
-                    <th style="width:10%">ID</th>
-                    <th style="width:20%">Temperature</th>
-                    <th style="width:20%">Humidity</th>
-                    <th style="width:20%">Pressure</th>
-                    <th style="width:30%">Timestamp</th>
-                </tr>
-            </table>
-        </div>
-
-        <br><br>
-
-        <table id="demo"></table>
-        <div align="right";>
-            <a href="index"> Return to general view </a>
+    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+        <a href="index" ><span class="w3-bar-item w3-left">Meteorological Station</span></a>
+        <div class="w3-bar-item w3-right">
+            <a>PIT G2&nbsp</a>
+            <a href=""><i class="fa fa-sign-out" aria-hidden="true"></i></a>
         </div>
     </div>
-</div>
 
-<script type="text/javascript" charset="utf-8">
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:0px;margin-top:25px;">
+        <!-- Header -->
+        <header class="w3-container" style="padding-top:20px">
+            <h5 class="w3-left"><b><i class="fa fa-table"></i> Data recorded until now</b></h5>
+            <a class="w3-right" style="padding-top:15px" href="index" ><b>Return to front page</b></a>
+        </header>
 
-  fetch('http://localhost:8080/api/group2/samples') //fetch of all samples
+        <div class="w3-panel">
+            <table id="data-table"></table>
+        </div>
+    </div>
+    <script type="text/javascript" charset="utf-8">
+        setInterval(main,1000);
+
+        function main(){
+          fetch('http://localhost:8080/api/group2/samples')
             .then(function (response) {
                 return response.json();
-            }).then(function (getAllSamples) {
-                //console.log(getAllSamples);
-                renderDataInTheTable(getAllSamples);
+            }).then(function (apiJsonData) {
+                renderDataInTheTable(apiJsonData);
             })
-
-        function renderDataInTheTable(todos) { //function to update dynamic table depending on the number of samples
-            const mytable = document.getElementById("html-data-table");
-            todos.forEach(todo => {
-                let newRow = document.createElement("tr");
-                Object.values(todo).forEach((value) => {
-                    let cell = document.createElement("td");
-                    cell.innerText = value;
-                    newRow.appendChild(cell);
-                })
-                mytable.appendChild(newRow);
-            });
         }
-</script>
+
+        function renderDataInTheTable(data) {
+          const arrayTitle = ['Gateway','ID','Temperature','Humidity','Pressure','Timestamp']
+          const mytable = document.getElementById("data-table");
+          mytable.innerHTML = '';
+
+          let initRow  = document.createElement("tr");
+          initRow.style = "width:100%";
+
+          for(let i = 0; i < 6; i++){
+            let cell = document.createElement("th");
+
+            if(i == 0 || i == 1){
+              cell.style = "width:12%";
+            }
+            else if(i == 5  ){
+              cell.style = "width:25%";
+            }
+            else{
+              cell.style = "width:17%";
+            }
+
+            cell.innerText = arrayTitle[i];
+            initRow.appendChild(cell);
+          }
+
+          mytable.appendChild(initRow);
+
+          data.forEach(sample => {
+              let newRow = document.createElement("tr");
+              Object.values(sample).forEach((value) => {
+                  let cell = document.createElement("td");
+                  cell.innerText = value;
+                  newRow.appendChild(cell);
+              })
+              mytable.appendChild(newRow);
+          });
+        }
+    </script>
 </body>
 </html>

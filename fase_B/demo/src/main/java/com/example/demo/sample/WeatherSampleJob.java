@@ -30,8 +30,10 @@ public class WeatherSampleJob implements Runnable {
             final var temperature = Double.parseDouble(sample.substring(2, 6));
             final var pressure = Integer.parseInt(sample.substring(6, 9));
             final var timeStamp = LocalDateTime.now();
+            final var gatewayID = Long.parseLong(sample.substring(9,11));
 
             WeatherSample weatherSample = new WeatherSample(
+                    gatewayID,
                     temperature,
                     humidity,
                     pressure,
