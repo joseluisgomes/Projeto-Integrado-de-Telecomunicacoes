@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity(name = "Weather")
-@IdClass(value = WeatherSample.class)
-@Table
+@Table(name = "weather")
+@IdClass(value = WeatherSampleId.class)
 @Getter
 @Setter
 public class WeatherSample implements Serializable {
@@ -49,10 +49,7 @@ public class WeatherSample implements Serializable {
             return true;
         if (!(o instanceof WeatherSample that))
             return false;
-        return that.temperature == temperature &&
-                    that.humidity == humidity &&
-                        that.pressure == pressure &&
-                            that.timeStamp.compareTo(timeStamp) == 0;
+        return gatewayID.equals(that.gatewayID) && sampleID.equals(that.sampleID);
     }
 
     @Override
@@ -61,11 +58,7 @@ public class WeatherSample implements Serializable {
             31 equals to a shift and subtraction, for better performance
             on some computer architectures: 31 * i = (i << 5) - i
          */
-        int result = timeStamp.hashCode();
-        result = 31 * result + Integer.hashCode(pressure);
-        result = 31 * result + Double.hashCode(humidity);
-        result = 31 * result + Double.hashCode(temperature);
-        return result;
+        return 31 * sampleID.hashCode() + gatewayID.hashCode();
     }
 
     @Override
