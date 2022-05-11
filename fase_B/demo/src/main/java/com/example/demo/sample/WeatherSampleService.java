@@ -17,26 +17,24 @@ public class WeatherSampleService {
         return weatherSampleRepo.findAll();
     }
 
- /*   public WeatherSample findSampleById(Long sampleId) {
-        log.info("Fetching sample with id {}", sampleId);
-        return weatherSampleRepo.findById(sampleId)
+    public WeatherSample findSampleById(Long gatewayID, Long sampleID) {
+        log.info("Fetching sample with id {}", sampleID);
+        return weatherSampleRepo.findById(new WeatherSampleId(gatewayID, sampleID))
                 .orElseThrow(() -> new IllegalStateException(
-                        "Sample with id " + sampleId + "not found."));
-    } */
+                        "Sample with id " + sampleID + "not found."));
+    }
 
     public void saveSample(WeatherSample sample) {
         log.info("Saving sample {} to the database", sample);
         weatherSampleRepo.save(sample);
     }
 
- /*   public void removeSampleById(Long sampleId) {
-        log.info("Removing sample with id {}", sampleId);
-        boolean isPresent = weatherSampleRepo.existsById(sampleId);
-        if (isPresent)
-            weatherSampleRepo.deleteById(sampleId);
+    public void removeSampleById(Long gatewayID, Long sampleID) {
+        final var sample = new WeatherSampleId(gatewayID, sampleID);
+        log.info("Removing sample with id {}", sample);
+        if (!weatherSampleRepo.existsById(sample))
+            throw new IllegalStateException("Sample with id" + sample + "not found.");
         else
-            throw new IllegalStateException(
-                    "Sample with id " + sampleId + "not found."
-            );
-    } */
+            weatherSampleRepo.deleteById(sample);
+    }
 }

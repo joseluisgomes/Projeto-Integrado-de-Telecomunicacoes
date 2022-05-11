@@ -18,11 +18,12 @@ public class WeatherSampleController {
         return weatherSampleService.findAllSamples();
     }
 
-/*    @GetMapping(path = "{sampleId}")
+    @GetMapping(path = {"{gatewayID}", "{sampleID}"})
     @PreAuthorize(value = "hasAnyRole('ROLE_ADMIN')")
-    public WeatherSample getSampleById(@PathVariable(name = "sampleId") Long sampleId) {
-        return weatherSampleService.findSampleById(sampleId);
-    } */
+    public WeatherSample getSampleById(@PathVariable(name = "gatewayID") Long gatewayID,
+                                       @PathVariable(name = "sampleId") Long sampleID) {
+        return weatherSampleService.findSampleById(gatewayID, sampleID);
+    }
 
     @PostMapping
     @PreAuthorize(value = "hasAuthority('sample:write')")
@@ -30,10 +31,11 @@ public class WeatherSampleController {
         weatherSampleService.saveSample(sample);
     }
 
-  /*  @DeleteMapping(path = "{sampleId}")
+    @DeleteMapping(path = {"{gatewayID}", "{sampleID}"})
     @PreAuthorize(value = "hasAuthority('sample:write')")
-    public void removeSampleById(@PathVariable(name = "sampleId") Long sampleId) {
-        weatherSampleService.removeSampleById(sampleId);
-    } */
+    public void removeSampleById(@PathVariable(name = "gatewayID") Long gatewayID,
+                                 @PathVariable(name = "sampleId") Long sampleID) {
+        weatherSampleService.removeSampleById(gatewayID, sampleID);
+    }
 }
 

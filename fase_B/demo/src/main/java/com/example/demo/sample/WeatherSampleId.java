@@ -1,6 +1,5 @@
 package com.example.demo.sample;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import java.io.Serializable;
@@ -25,15 +24,14 @@ public class WeatherSampleId implements Serializable {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof WeatherSampleId that))
+        if (!(o instanceof WeatherSampleId sample))
             return false;
-        return gatewayID.equals(that.gatewayID) && sampleID.equals(that.sampleID);
+        return gatewayID.equals(sample.gatewayID) && sampleID.equals(sample.sampleID);
     }
 
     @Override
     public int hashCode() {
-        int result = sampleID.hashCode();
-        return 31 * result + gatewayID.hashCode();
+        return 31 * sampleID.hashCode() + gatewayID.hashCode();
     }
 
     @Override

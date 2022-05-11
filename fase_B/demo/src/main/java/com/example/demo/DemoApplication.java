@@ -1,24 +1,20 @@
 package com.example.demo;
 
-import com.example.demo.sample.WeatherSample;
-import com.example.demo.sample.WeatherSampleJob;
 import com.example.demo.sample.WeatherSampleRepo;
+import com.example.demo.server.ServerWrapper;
+import io.socket.engineio.server.Emitter;
+import io.socket.socketio.server.SocketIoSocket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.net.ServerSocket;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.List;
-
 @SpringBootApplication
 @RequiredArgsConstructor
 public class DemoApplication {
 	private static final int PORT = 5000;
+	private static final String ip = "192.168.1.7"; // IP address
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -35,7 +31,7 @@ public class DemoApplication {
 				}
 			} catch (Exception e) { e.printStackTrace(); } */
 
-			weatherSampleRepo.deleteAll();
+		/*	weatherSampleRepo.deleteAll();
 
 			final var timeStamp = LocalDateTime.now();
 			final var sample1 = new WeatherSample(
@@ -52,7 +48,22 @@ public class DemoApplication {
 					timeStamp
 			);
 			weatherSampleRepo.saveAll(List.of(sample1, sample2));
-			weatherSampleRepo.findAll().forEach(System.out::println);
+			weatherSampleRepo.findAll().forEach(System.out::println); */
+			final var serverWrapper = new ServerWrapper(ip, 8080, null);
+
+			try { serverWrapper.startServer(); }
+			catch (Exception e) { e.printStackTrace(); }
+
+			final var server = serverWrapper.getSocketIoServer();
+			final var nameSpace = server.namespace("/");
+			nameSpace.on("START",
+					objects -> {
+						final var socket = (SocketIoSocket) objects[0];
+						System.out.println(
+								"Client " + socket.getId() +
+										" (" + socket.getInitialHeaders().get("remote_address") + ") has connected."
+						);
+				});
 		};
 	}
 }

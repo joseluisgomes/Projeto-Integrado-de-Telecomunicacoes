@@ -32,7 +32,7 @@ public class WeatherSampleJob implements Runnable {
             final var timeStamp = LocalDateTime.now();
             final var gatewayID = Long.parseLong(sample.substring(9,11));
 
-            WeatherSample weatherSample = new WeatherSample(
+            final var weatherSample = new WeatherSample(
                     gatewayID,
                     temperature,
                     humidity,
