@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class WeatherSampleService {
     private final WeatherSampleRepo weatherSampleRepo;
+    private final Map<String, String> protocolFlags;
 
     public List<WeatherSample> findAllSamples() {
         log.info("Fetching all samples");
@@ -36,5 +38,11 @@ public class WeatherSampleService {
             throw new IllegalStateException("Sample with id" + sample + "not found.");
         else
             weatherSampleRepo.deleteById(sample);
+    }
+
+    public void saveProtocolMessage(String message) {
+     //   final var gatewayID = message.substring()
+        System.out.println(message);
+   //     protocolFlags.put(gatewayID, message);
     }
 }

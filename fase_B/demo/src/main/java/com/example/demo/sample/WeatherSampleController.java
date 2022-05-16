@@ -37,5 +37,10 @@ public class WeatherSampleController {
                                  @PathVariable(name = "sampleId") Long sampleID) {
         weatherSampleService.removeSampleById(gatewayID, sampleID);
     }
+
+    @PostMapping(path = "/protocol")
+    public void saveProtocolMessage(@RequestBody String message) {
+        weatherSampleService.saveProtocolMessage(message);
+    }
 }
 

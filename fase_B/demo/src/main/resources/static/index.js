@@ -74,8 +74,8 @@ function drawTempGraph(idValues,tempValues) {
         fill:true,
         lineTension:0,
         label:"Temperature in ºC",
-        backgroundColor: "rgb(33,150,243)",
-        borderColor:"rgb(255,255,255)",
+        backgroundColor: "hsl(207,90%,54%)",
+        borderColor:"hsl(0,0%,100%)",
         data: tempValues
       }]
     },
@@ -95,8 +95,8 @@ function drawHumGraph(idValues,humValues) {
         fill:true,
         lineTension:0,
         label:"Humidity in %",
-        backgroundColor: "rgb(0,150,136)",
-        borderColor:"rgb(255,255,255)",
+        backgroundColor: "hsl(174,100%,29%)",
+        borderColor:"hsl(0,0%,100%)",
         data: humValues
       }]
     },
@@ -116,8 +116,8 @@ function drawPresGraph(idValues,presValues) {
         fill:true,
         lineTension:0,
         label:"Atmosferic Pressure in hPa",
-        backgroundColor: "rgb(139,195,74)",
-        borderColor:"rgb(255,255,255)",
+        backgroundColor: "hsl(88,50%,53%)",
+        borderColor:"hsl(0,0%,100%)",
         data: presValues
       }]
     },

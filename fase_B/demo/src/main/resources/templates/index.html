@@ -6,6 +6,7 @@
   <title>Projeto Integrado de Telecomunicações</title>
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -18,7 +19,7 @@
     .col-container {display:flex; width: 100%;}
     .col {flex:1; padding: 8px;}
     .map {overflow:hidden;background:none!important;}
-    .button { background-color:#f1f1f1; }
+    .button { background-color: hsl(0, 0%, 95%); }
   </style>
 </head>
 
@@ -94,13 +95,7 @@
 
           <div class="col">
             <div class="w3-dropdown-hover w3-right">
-              <button class="w3-button button">CHANGE GATEWAY STATUS</button>
-              <div class="w3-dropdown-content w3-bar-block w3-card-4 w3-mobile">
-                <a href="#" class="w3-bar-item w3-button">START</a>
-                <a href="#" class="w3-bar-item w3-button">PAUSE</a>
-                <a href="#" class="w3-bar-item w3-button">RESTART</a>
-                <a href="#" class="w3-bar-item w3-button">END</a>
-              </div>
+              <button id="btn-change" onclick="alert()" class="w3-button button">CHANGE GATEWAY STATUS</button>
             </div>
           </div>
         </div>
@@ -139,5 +134,6 @@
 <!-- End page content -->
 
 <script src="index.js" type="text/javascript"></script>
+<script src="post.js" type="text/javascript"></script>
 </body>
 </html>
