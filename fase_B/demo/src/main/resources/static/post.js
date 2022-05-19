@@ -1,23 +1,26 @@
 function alert() {
-    let text;
-    let id = prompt("ID of gateway to update", "GatewayID");
-      if (id == null || id == "") {
-        text = "User cancelled the prompt.";
-      } else {
-        //console.log(id)
-        let change = prompt('Change to be made to Gateway ' + id, "Change");
+    var modal = document.getElementById("customModal");
+    var btn = document.getElementById("btn-change");
+    var span = document.getElementsByClassName("close")[0];
 
-        if(change == null || change == "") {
-            text = "User cancelled the prompt.";
-        } else {
-            text = "Gateway " + id + " status is being updated to " + change;
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
 
-            if(change == 'start') {
-                startFunc(id,change);
-            }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
         }
-      }
-      console.log(text);
+    }
+}
+
+function actionFunction() {
+    var list = document.getElementById("myList");
+    document.getElementById("actionText").value = list.options[list.selectedIndex].text;
 }
 
 function startFunc(id,change) {
@@ -32,7 +35,12 @@ function startFunc(id,change) {
       console.log(xhr.responseText);
     }};
 
-    let data = id + change;
+    var obj = new Object();
+    obj.gatewayID = id;
+    obj.message = change;
+
+    var data = JSON.stringify(obj);
+
     console.table(data);
 
     xhr.send(data);

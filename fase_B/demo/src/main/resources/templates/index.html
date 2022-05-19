@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <style>
@@ -96,6 +97,21 @@
           <div class="col">
             <div class="w3-dropdown-hover w3-right">
               <button id="btn-change" onclick="alert()" class="w3-button button">CHANGE GATEWAY STATUS</button>
+              <form>
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                  <b> Select the action to be implemented </b>
+                  <select id="myList" onchange="actionFunction()">
+                    <option> ---Choose action--- </option>
+                    <option> START </option>
+                    <option> STOP </option>
+                    <option> PAUSE </option>
+                    <option> RESTART </option>
+                  </select>
+                  <p> The action to be implemented is:
+                  <input type="text" id="actionText" size="20"></p>
+                </div>
+              </form>
             </div>
           </div>
         </div>

@@ -1,18 +1,19 @@
 package com.example.demo.sample;
 
+import com.example.demo.ProtocolPacket;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class WeatherSampleService {
     private final WeatherSampleRepo weatherSampleRepo;
-    private final Map<String, String> protocolFlags;
+    public static final List<ProtocolPacket> GATEWAY_PACKETS = new ArrayList<>();
 
     public List<WeatherSample> findAllSamples() {
         log.info("Fetching all samples");
@@ -22,8 +23,7 @@ public class WeatherSampleService {
     public WeatherSample findSampleById(Long gatewayID, Long sampleID) {
         log.info("Fetching sample with id {}", sampleID);
         return weatherSampleRepo.findById(new WeatherSampleId(gatewayID, sampleID))
-                .orElseThrow(() -> new IllegalStateException(
-                        "Sample with id " + sampleID + "not found."));
+                .orElseThrow(() -> new IllegalStateException("Sample with id " + sampleID + "not found."));
     }
 
     public void saveSample(WeatherSample sample) {
@@ -40,9 +40,8 @@ public class WeatherSampleService {
             weatherSampleRepo.deleteById(sample);
     }
 
-    public void saveProtocolMessage(String message) {
-     //   final var gatewayID = message.substring()
-        System.out.println(message);
-   //     protocolFlags.put(gatewayID, message);
+    public void saveProtocolMessage(ProtocolPacket packet) {
+        log.info("Saving packet: {}", packet);
+        GATEWAY_PACKETS.add(packet);
     }
 }

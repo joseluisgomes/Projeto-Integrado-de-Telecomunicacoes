@@ -1,5 +1,6 @@
 package com.example.demo.sample;
 
+import com.example.demo.ProtocolPacket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +40,8 @@ public class WeatherSampleController {
     }
 
     @PostMapping(path = "/protocol")
-    public void saveProtocolMessage(@RequestBody String message) {
-        weatherSampleService.saveProtocolMessage(message);
+    public void saveProtocolMessage(@RequestBody ProtocolPacket packet) {
+        weatherSampleService.saveProtocolMessage(packet);
     }
 }
 

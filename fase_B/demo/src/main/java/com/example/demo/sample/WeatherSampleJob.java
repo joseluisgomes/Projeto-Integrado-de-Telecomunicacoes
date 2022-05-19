@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.time.LocalDateTime;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +14,7 @@ public class WeatherSampleJob implements Runnable {
     private final Socket socket;
     private final WeatherSampleRepo repository;
     private final Logger logger = Logger.getAnonymousLogger();
+    private final Lock lock = new ReentrantLock();
 
     public WeatherSampleJob(Socket socket,
                             WeatherSampleRepo weatherSampleRepo) {
@@ -21,6 +24,7 @@ public class WeatherSampleJob implements Runnable {
 
     @Override
     public void run() {
+        lock.lock();
         try {
             final var inputStream = new InputStreamReader(socket.getInputStream());
             final var buffer = new BufferedReader(inputStream);
@@ -49,5 +53,6 @@ public class WeatherSampleJob implements Runnable {
             buffer.close();
             socket.close();
         } catch (IOException ioException) { ioException.printStackTrace(); }
+        lock.unlock();
     }
 }
