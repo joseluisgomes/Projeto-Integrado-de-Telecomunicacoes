@@ -1,11 +1,11 @@
 package com.example.demo.sample;
 
+import com.example.demo.DemoApplication;
 import com.example.demo.ProtocolPacket;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class WeatherSampleService {
     private final WeatherSampleRepo weatherSampleRepo;
-    public static final List<ProtocolPacket> GATEWAY_PACKETS = new ArrayList<>();
 
     public List<WeatherSample> findAllSamples() {
         log.info("Fetching all samples");
@@ -41,7 +40,11 @@ public class WeatherSampleService {
     }
 
     public void saveProtocolMessage(ProtocolPacket packet) {
-        log.info("Saving packet: {}", packet);
-        GATEWAY_PACKETS.add(packet);
+        final var gatewayID = Long.valueOf(packet.gatewayID());
+        final var message = packet.message();
+
+        log.info("Saving packet: {} to Gateway {}", packet, packet.gatewayID());
+        DemoApplication.PACKET_PER_GATEWAY.put(gatewayID, message);
+        DemoApplication.PACKET_BELL = true;
     }
 }
