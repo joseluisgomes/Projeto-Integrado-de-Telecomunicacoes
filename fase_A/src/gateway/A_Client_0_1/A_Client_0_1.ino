@@ -241,7 +241,7 @@
       Serial.println("Connected to server successful!");
    
       client.print(temperatureChar);  
-      Serial.println("Disconnecting...");
+   //   Serial.println("Disconnecting...");
       client.stop();
    }
   }

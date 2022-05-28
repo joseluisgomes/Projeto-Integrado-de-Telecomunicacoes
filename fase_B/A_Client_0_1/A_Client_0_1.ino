@@ -20,7 +20,7 @@
   char pass[] = SECRET_PASS;
   int keyIndex = 0;
    const uint16_t port = 5000;
-  const char * host = "192.168.1.102";
+  const char * host = "192.168.1.7";
 char epochString[10];
   bool first = true;
     String formattedTime;

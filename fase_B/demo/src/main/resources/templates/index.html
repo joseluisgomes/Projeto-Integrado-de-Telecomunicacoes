@@ -2,17 +2,18 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <link rel="icon" href="images/main_icon.png">
   <title>Projeto Integrado de Telecomunicações</title>
+  <link rel="icon" href="images/main_icon.png">
+
   <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-ios.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-  <link rel="stylesheet" href="index.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <style>
@@ -27,125 +28,143 @@
 <body class="w3-light-grey">
 
 <!-- Top container -->
-  <div class="w3-bar w3-top w3-black w3-large">
-    <span class="w3-bar-item w3-left">Meteorological Station</span>
-    <div class="w3-bar-item w3-right">
-      <a>PIT G2&nbsp</a>
-      <a href="#"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+<div class="w3-bar w3-top w3-black w3-large">
+  <span class="w3-bar-item w3-left">Meteorological Station</span>
+  <div class="w3-bar-item w3-right">
+    <a>PIT G2&nbsp;</a>
+    <a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
   </div>
-  </div>
+</div>
 
 <!-- !PAGE CONTENT! -->
-  <div class="w3-main" style="margin-left:0px;margin-top:20px;">
+<div class="w3-main" style="margin-left:0px;margin-top:20px;">
 
-    <!-- Header -->
-    <header class="w3-container" style="padding-top:20px">
-      <h5><b><i class="fa fa-dashboard"></i> Dashboard</b></h5>
-    </header>
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:20px">
+    <h5><b><i class="fa fa-dashboard"></i> Dashboard</b></h5>
+  </header>
 
-    <div class="w3-row-padding w3-margin-bottom">
-      <div class="w3-quarter">
-        <div class="w3-container w3-red w3-padding-16">
-          <div class="w3-left"><i class="fa fa-comment w3-xxxlarge" aria-hidden="true"></i></div>
-          <div class="w3-right">
-            <h3><p id="num_samples"></p></h3>
-          </div>
-          <div class="w3-clear"></div>
-          <h4>Number of samples received</h4>
+  <div class="w3-row-padding w3-margin-bottom">
+    <div class="w3-quarter">
+      <div class="w3-container w3-red w3-padding-16">
+        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+          <h3><p id="num_samples"></p></h3>
         </div>
-      </div>
-      <div class="w3-quarter">
-        <div class="w3-container w3-blue w3-padding-16">
-          <div class="w3-left"><i class="fa fa-thermometer-three-quarters w3-xxxlarge" aria-hidden="true"></i></div>
-          <div class="w3-right">
-            <h3><p id="cur_temp"></p></h3>
-          </div>
-          <div class="w3-clear"></div>
-          <h4>Current Temperature</h4>
-        </div>
-      </div>
-      <div class="w3-quarter">
-        <div class="w3-container w3-teal w3-padding-16">
-          <div class="w3-left"><i class="fa fa-tint w3-xxxlarge" aria-hidden="true"></i></div>
-          <div class="w3-right">
-            <h3><p id="cur_hum"></p></h3>
-          </div>
-          <div class="w3-clear"></div>
-          <h4>Current Humidity</h4>
-        </div>
-      </div>
-      <div class="w3-quarter">
-        <div class="w3-container w3-light-green w3-text-white w3-padding-16">
-          <div class="w3-left"><i class="fa fa-skyatlas w3-xxxlarge" aria-hidden="true"></i></div>
-          <div class="w3-right">
-            <h3><p id="cur_pres"></p></h3>
-          </div>
-          <div class="w3-clear"></div>
-          <h4>Current Atmosferic Pressure</h4>
-        </div>
+        <div class="w3-clear"></div>
+        <h4>Number of samples received</h4>
       </div>
     </div>
-
-    <!-- MAIN CONTAINER WITH MAP & GRAPHS & GATEWAY STATUS CHANGE-->
-    <div class="col-container">
-      <div class="col">
-        <div class="col-container">
-          <div class="col">
-            <h5>Station location</h5>
-          </div>
-
-          <div class="col">
-            <div class="w3-dropdown-hover w3-right">
-              <button id="btn-change" onclick="alert()" class="w3-button button">CHANGE GATEWAY STATUS</button>
-              <form>
-                <div class="modal-content">
-                  <span class="close">&times;</span>
-                  <b> Select the action to be implemented </b>
-                  <select id="myList" onchange="actionFunction()">
-                    <option> ---Choose action--- </option>
-                    <option> START </option>
-                    <option> STOP </option>
-                    <option> PAUSE </option>
-                    <option> RESTART </option>
-                  </select>
-                  <p> The action to be implemented is:
-                  <input type="text" id="actionText" size="20"></p>
-                </div>
-              </form>
-            </div>
-          </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-blue w3-padding-16">
+        <div class="w3-left"><i class="fa fa-thermometer-three-quarters w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+          <h3><p id="cur_temp"></p></h3>
         </div>
-        <iframe id="map" width=100% height=85% src="https://maps.google.com/maps?q=Campus%20de%20Azur%C3%A9m,%20Av.%20da%20Universidade,%204800-058%20Guimar%C3%A3es&t=k&z=9&ie=UTF8&iwloc=&output=embed"></iframe>
-      </div>
-
-      <div class="col">
-        <div class="col-container">
-          <div class="col">
-            <h5>Feeds</h5>
-          </div>
-          <div class="col">
-            <button id="btn-next" class="w3-button button w3-right" onclick="nextGraph()" style="margin-right:1px">NEXT</button>
-            <button id="btn-prev" class="w3-button button w3-right" onclick="prevGraph()" style="margin-right:1px">PREV</button>
-          </div>
-        </div>
-
-        <canvas id="temp_graph" class="canvas" style="width:100%"></canvas>
-
-        <div class="w3-right";>
-          <a href="data"> Check full data tables </a>
-        </div>
+        <div class="w3-clear"></div>
+        <h4>Current Temperature</h4>
       </div>
     </div>
-
-    <br>
-
-    <!-- Footer -->
-    <footer class="w3-container w3-ios-green">
-      <p>Project's <a href="https://github.com/joseluisgomes/Projeto-Integrado-de-Telecomunicacoes" target="blank">Github</a></p>
-      <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-      <p>Developed by Group 2 in <i>Projeto Integrado de Telecomunicações</i> from UMinho</p>
-    </footer>
+    <div class="w3-quarter">
+      <div class="w3-container w3-teal w3-padding-16">
+        <div class="w3-left"><i class="fa fa-tint w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+          <h3><p id="cur_hum"></p></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Current Humidity</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-light-green w3-text-white w3-padding-16">
+        <div class="w3-left"><i class="fa fa-skyatlas w3-xxxlarge" aria-hidden="true"></i></div>
+        <div class="w3-right">
+          <h3><p id="cur_pres"></p></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Current Atmosferic Pressure</h4>
+      </div>
+    </div>
   </div>
+
+  <div id ="customModal" class="modal">
+    <form>
+      <div class="modal-content">
+        <span id = "btn-close" class="close">&times;</span>
+        <!-- FIRST BIT -->
+        <div>
+          <b> Select the action to be implemented </b>
+          <select id="myList1" onchange="actionFunction()">
+            <option> ---Choose action--- </option>
+            <option> START </option>
+            <option> STOP </option>
+            <option> PAUSE </option>
+            <option> RESTART </option>
+          </select>
+        </div>
+        <!-- SECOND BIT -->
+        <div id="invDiv" style="visibility:hidden; padding-top:15px">
+          <b> Select the gateway to be changed &nbsp;&nbsp;&nbsp;</b>
+          <select id="myList2" onchange="gateFunction()">
+            <option> ---Choose gateway--- </option>
+            <option> 1 </option>
+            <option> 2 </option>
+            <option> 3 </option>
+            <option> 4 </option>
+          </select>
+        </div>
+        <div style="visibility:hidden; padding-top:15px">
+          <button id="btn-confirm" class="w3-button button" onclick="startFunc()">CONFIRM CHANGES</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- MAIN CONTAINER WITH MAP & GRAPHS & GATEWAY STATUS CHANGE-->
+  <div class="col-container">
+    <div class="col">
+      <div class="col-container">
+        <div class="col">
+          <h5>Station location</h5>
+        </div>
+
+        <div class="col">
+          <div class="w3-dropdown-hover w3-right">
+            <button id="btn-change" onclick="customAlert()" class="w3-button button">CHANGE GATEWAY STATUS</button>
+          </div>
+        </div>
+      </div>
+      <iframe id="map" width=100% height=85% src="https://maps.google.com/maps?q=Campus%20de%20Azur%C3%A9m,%20Av.%20da%20Universidade,%204800-058%20Guimar%C3%A3es&t=k&z=9&ie=UTF8&iwloc=&output=embed"></iframe>
+    </div>
+
+    <div class="col">
+      <div class="col-container">
+        <div class="col">
+          <h5>Historical Data</h5>
+        </div>
+        <div class="col">
+          <button id="btn-next" class="w3-button button w3-right" onclick="nextGraph()" style="margin-right:1px">NEXT</button>
+          <button id="btn-prev" class="w3-button button w3-right" onclick="prevGraph()" style="margin-right:1px">PREV</button>
+        </div>
+      </div>
+
+      <canvas id="temp_graph" class="canvas" style="width:100%"></canvas>
+
+      <div class="w3-right">
+        <a href="data"> Check full data tables </a>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-ios-green">
+    <p>Project's <a href="https://github.com/joseluisgomes/Projeto-Integrado-de-Telecomunicacoes" target="blank">Github</a></p>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    <p>Developed by Group 2 in <i> Projeto Integrado de Telecomunicações </i> from UMinho</p>
+  </footer>
+</div>
 
 <!-- End page content -->
 
