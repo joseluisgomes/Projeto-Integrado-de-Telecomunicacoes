@@ -7,16 +7,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.demo.security.ApplicationUserRole.ADMIN;
 import static com.example.demo.security.ApplicationUserRole.USER;
@@ -47,10 +43,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login").permitAll()
                     .defaultSuccessUrl("/index", true)
                 .and()
-                .rememberMe()
-                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(5)) // 5 days of duration
-                    .key("security")
-                .and()
                 .logout()
                     .logoutUrl("/logout")
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // CSRF is disabled
@@ -62,40 +54,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     protected UserDetailsService userDetailsService(DataSource dataSource) {
-        final var joseLuisUser = User.builder()
-                .username("joseluis")
-                .password(passwordEncoder.encode("gomespitgrupo2"))
-                .roles(ADMIN.name()) // ROLE_ADMIN
-                .build();
-
-        final var luisUser = User.builder()
-                .username("luis")
-                .password(passwordEncoder.encode("oliveirapitgrupo2"))
-                .roles(ADMIN.name())
-                .build();
-
-        final var alexandreUser = User.builder()
-                .username("alex")
-                .password(passwordEncoder.encode("cardosopitgrupo2"))
-                .roles(ADMIN.name())
-                .build();
-
-        final var catarinaUser = User.builder()
-                .username("catarina")
-                .password(passwordEncoder.encode("nevespitgrupo2"))
-                .roles(ADMIN.name())
-                .build();
-
-        final var teacherUser = User.builder()
-                .username("teacher")
-                .password(passwordEncoder.encode("teacherpitgrupo2"))
-                .roles(USER.name())
-                .build();
-
-      //  final var manager = new JdbcUserDetailsManager(dataSource);
-
-        return new InMemoryUserDetailsManager(List.of(
-                joseLuisUser, luisUser, alexandreUser, catarinaUser, teacherUser
-        ));
+        return new JdbcUserDetailsManager(dataSource);
     }
 }
