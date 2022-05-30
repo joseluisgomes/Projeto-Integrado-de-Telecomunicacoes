@@ -18,9 +18,10 @@
   #include "secrets.h"
   char ssid[] = SECRET_SSID; 
   char pass[] = SECRET_PASS;
+  boolean first2=true;
   int keyIndex = 0;
    const uint16_t port = 5000;
-  const char * host = "192.168.1.7";
+  const char * host = "192.168.1.102";
 char epochString[10];
   bool first = true;
     String formattedTime;
@@ -130,7 +131,7 @@ char epochString[10];
   }
   
   
-
+void(* resetFunc) (void) = 0;
   
   void setup() {
     
@@ -215,8 +216,10 @@ char epochString[10];
     
       timeClient.update();
       first = false;
+      //delay(1000);
         }
     if(newTemperature){
+      
       newTemperature = false;
      //the variables to be passed to ThingSpeak
     
@@ -276,8 +279,41 @@ char epochString[10];
       }
       Serial.println("Connected to server successful!");
    
-      client2.print(temperatureChar);  
+
+      byte received[1]={3};
+      Serial.print("------------\n;");
+      
+        
+      //if(first || first2){
+              
+
+        while(client2.read(received, 1)==0);
+        //}
+
+      //first2=true;
+
+      boolean caseCond = false;
+      switch((char) received[0]) {
+        case '1': // START
+            resetFunc();
+            break;
+        case '2': // STOP
+            exit(0);
+            break;
+        case '3': // PAUSE
+            while(client2.read(received, 1)==0){
+                if((char) received[0] =='4')
+                    caseCond = false;
+            }
+            break;
+      }
+
+      Serial.print("----");
+      Serial.print(received[0]);
+        Serial.print("------------\n");
       Serial.println("Disconnecting...");
+      client2.print(temperatureChar);
+              client2.flush();
       client2.stop();
       
    }

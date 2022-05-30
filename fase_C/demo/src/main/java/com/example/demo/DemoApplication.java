@@ -60,17 +60,42 @@ class ServerWorker implements Runnable {
 					new BufferedOutputStream(socket.getOutputStream())
 			);
 			final var buffer = new BufferedReader(inputStream);
+
+			try {
+				int we=0;
+				if(PACKET_BELL) {
+					if (PACKET_PER_GATEWAY.containsKey(gatewayID)) {
+						switch (PACKET_PER_GATEWAY.get(gatewayID)) {
+							case "START":
+								outputStream.write('1');
+								outputStream.flush();
+								break;
+							case "STOP":
+								outputStream.write('2');
+								outputStream.flush();
+								break;
+							case "PAUSE":
+								outputStream.write('3');
+								outputStream.flush();
+								PACKET_BELL=false;
+								while(!PACKET_BELL);
+								outputStream.write('4');
+								outputStream.flush();
+								break;
+							case "RESTART":
+								outputStream.write('4');
+								outputStream.flush();
+								break;
+						}
+					}
+				}
+				outputStream.write(we);
+				outputStream.flush();
+			} catch (IOException e) { e.printStackTrace(); }
+
 			final var sample = buffer.readLine();
 
-			if (PACKET_BELL) {
-				try {
-					if (PACKET_PER_GATEWAY.containsKey(gatewayID)) {
-						outputStream.writeUTF(PACKET_PER_GATEWAY.get(gatewayID));
-						outputStream.flush();
-					}
-				} catch (IOException e) { e.printStackTrace(); }
-				PACKET_BELL = false;
-			}
+			PACKET_BELL = false;
 
 			final var humidity = Double.parseDouble(sample.substring(0, 2));
 			final var temperature = Double.parseDouble(sample.substring(2, 6));
