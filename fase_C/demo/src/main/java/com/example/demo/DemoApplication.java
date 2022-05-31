@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.example.demo.DemoApplication.*;
@@ -32,12 +33,32 @@ public class DemoApplication {
 	@Bean
 	CommandLineRunner commandLineRunner(WeatherSampleRepo repository) {
 		return args -> {
-			try(final var serverSocket = new ServerSocket(PORT)) {
+		/*	try(final var serverSocket = new ServerSocket(PORT)) {
 				while(true) {
 					final var attemptSocket = serverSocket.accept();
 					new Thread(new ServerWorker(repository, attemptSocket)).start();
 				}
-			} catch (IOException e) { e.printStackTrace(); }
+			} catch (IOException e) { e.printStackTrace(); } */
+
+			repository.deleteAll();
+
+			final var timeStamp = LocalDateTime.now();
+			final var sample1 = new WeatherSample(
+					1L,
+					20.0,
+					89.0,
+					300,
+					timeStamp
+			);
+			final var sample2 = new WeatherSample(
+					1L,
+					24.5,
+					89.0,
+					300,
+					timeStamp
+			);
+			repository.saveAll(List.of(sample1, sample2));
+			repository.findAll().forEach(System.out::println);
 		};
 	}
 }
@@ -66,26 +87,26 @@ class ServerWorker implements Runnable {
 				if(PACKET_BELL) {
 					if (PACKET_PER_GATEWAY.containsKey(gatewayID)) {
 						switch (PACKET_PER_GATEWAY.get(gatewayID)) {
-							case "START":
+							case "START" -> {
 								outputStream.write('1');
 								outputStream.flush();
-								break;
-							case "STOP":
+							}
+							case "STOP" -> {
 								outputStream.write('2');
 								outputStream.flush();
-								break;
-							case "PAUSE":
+							}
+							case "PAUSE" -> {
 								outputStream.write('3');
 								outputStream.flush();
-								PACKET_BELL=false;
-								while(!PACKET_BELL);
+								PACKET_BELL = false;
+								while (!PACKET_BELL) ;
 								outputStream.write('4');
 								outputStream.flush();
-								break;
-							case "RESTART":
+							}
+							case "RESTART" -> {
 								outputStream.write('4');
 								outputStream.flush();
-								break;
+							}
 						}
 					}
 				}
