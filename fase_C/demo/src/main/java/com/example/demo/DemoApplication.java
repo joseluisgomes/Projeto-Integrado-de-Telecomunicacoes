@@ -57,14 +57,42 @@ public class DemoApplication {
 					300,
 					timeStamp
 			);
-			repository.saveAll(List.of(sample1, sample2));
+			final var sample3 = new WeatherSample(
+					2L,
+					25.2,
+					68.0,
+					650,
+					timeStamp
+			);
+			final var sample4 = new WeatherSample(
+					2L,
+					24.8,
+					65.6,
+					562,
+					timeStamp
+			);
+			final var sample5 = new WeatherSample(
+					3L,
+					24.2,
+					74.3,
+					651,
+					timeStamp
+			);
+			final var sample6 = new WeatherSample(
+					3L,
+					25.7,
+					76.8,
+					587,
+					timeStamp
+			);
+			repository.saveAll(List.of(sample1, sample2, sample3, sample4, sample5, sample6));
 			repository.findAll().forEach(System.out::println);
 		};
 	}
 }
 
 class ServerWorker implements Runnable {
-	private final WeatherSampleRepo repository;
+	private final WeatherSampleRepo repository; // TODO: application.properties -> alterar create-drop para update
 	private final Socket socket;
 
 	public ServerWorker(WeatherSampleRepo repository,

@@ -7,7 +7,7 @@ function main(){
   }).then(function (apiJsonData) {
       samples = parseData(apiJsonData);
       lastSample = getLastSample(samples);
-      displaySample(lastSample);
+      displaySample(lastSample,samples);
       drawGraph(samples,lastSample);
   })
 }
@@ -23,11 +23,19 @@ function getLastSample(samples){
   return lastSample;
 }
 
-function displaySample(lastSample){
+function displaySample(lastSample,samples){
   document.getElementById('num_samples').innerHTML = lastSample.sampleID;
-  document.getElementById('cur_temp').innerHTML = lastSample.temperature + ' ºC';
-  document.getElementById('cur_hum').innerHTML = lastSample.humidity + ' %';
-  document.getElementById('cur_pres').innerHTML = lastSample.pressure + ' hPa';
+
+  for(i = 0; i < lastSample.sampleID;i++) {
+    if(samples[i].gatewayID == 1) {
+        gateTemp = samples[i].temperature;
+        gateHum = samples[i].humidity;
+        gatePres = samples[i].pressure;
+    }
+  }
+  document.getElementById('cur_temp').innerHTML = gateTemp + ' ºC';
+  document.getElementById('cur_hum').innerHTML = gateHum + ' %';
+  document.getElementById('cur_pres').innerHTML = gatePres + ' hPa';
   return;
 }
 
@@ -38,15 +46,17 @@ function drawGraph(samples,lastSample){
   let presValues = [];
 
   for(i = 0; i < lastSample.sampleID; i++){
-    let value_id = samples[i].sampleID;
-    let value_temp = samples[i].temperature;
-    let value_hum = samples[i].humidity;
-    let value_pres = samples[i].pressure;
+    if(samples[i].gatewayID == 1) {
+        let value_id = samples[i].sampleID;
+        let value_temp = samples[i].temperature;
+        let value_hum = samples[i].humidity;
+        let value_pres = samples[i].pressure;
 
-    idValues.push(value_id);
-    tempValues.push(value_temp);
-    humValues.push(value_hum);
-    presValues.push(value_pres);
+        idValues.push(value_id);
+        tempValues.push(value_temp);
+        humValues.push(value_hum);
+        presValues.push(value_pres);
+    }
   }
 
   const collection = document.getElementsByTagName("canvas");
