@@ -1,6 +1,0 @@
-protocolo de comunicação
-identifier do gateway e do Sistema Simulado
-Sistema Simulado mais realista
-adicionar auto-updater
-
-verificar como fazer localização por IP --> funcionalidades avançadas

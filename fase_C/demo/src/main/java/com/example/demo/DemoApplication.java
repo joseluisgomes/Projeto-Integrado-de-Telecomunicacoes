@@ -13,7 +13,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.example.demo.DemoApplication.*;
@@ -33,66 +32,18 @@ public class DemoApplication {
 	@Bean
 	CommandLineRunner commandLineRunner(WeatherSampleRepo repository) {
 		return args -> {
-		/*	try(final var serverSocket = new ServerSocket(PORT)) {
+			try(final var serverSocket = new ServerSocket(PORT)) {
 				while(true) {
 					final var attemptSocket = serverSocket.accept();
 					new Thread(new ServerWorker(repository, attemptSocket)).start();
 				}
-			} catch (IOException e) { e.printStackTrace(); } */
-
-			repository.deleteAll();
-
-			final var timeStamp = LocalDateTime.now();
-			final var sample1 = new WeatherSample(
-					1L,
-					20.0,
-					89.0,
-					300,
-					timeStamp
-			);
-			final var sample2 = new WeatherSample(
-					1L,
-					24.5,
-					89.0,
-					300,
-					timeStamp
-			);
-			final var sample3 = new WeatherSample(
-					2L,
-					25.2,
-					68.0,
-					650,
-					timeStamp
-			);
-			final var sample4 = new WeatherSample(
-					2L,
-					24.8,
-					65.6,
-					562,
-					timeStamp
-			);
-			final var sample5 = new WeatherSample(
-					3L,
-					24.2,
-					74.3,
-					651,
-					timeStamp
-			);
-			final var sample6 = new WeatherSample(
-					3L,
-					25.7,
-					76.8,
-					587,
-					timeStamp
-			);
-			repository.saveAll(List.of(sample1, sample2, sample3, sample4, sample5, sample6));
-			repository.findAll().forEach(System.out::println);
+			} catch (IOException e) { e.printStackTrace(); }
 		};
 	}
 }
 
 class ServerWorker implements Runnable {
-	private final WeatherSampleRepo repository; // TODO: application.properties -> alterar create-drop para update
+	private final WeatherSampleRepo repository;
 	private final Socket socket;
 
 	public ServerWorker(WeatherSampleRepo repository,
@@ -141,7 +92,6 @@ class ServerWorker implements Runnable {
 				outputStream.write(we);
 				outputStream.flush();
 			} catch (IOException e) { e.printStackTrace(); }
-
 			final var sample = buffer.readLine();
 
 			PACKET_BELL = false;
@@ -157,7 +107,6 @@ class ServerWorker implements Runnable {
 					pressure,
 					timeStamp
 			);
-
 			repository.save(weatherSample);
 			socket.close();
 		} catch (IOException e) { e.printStackTrace(); }
