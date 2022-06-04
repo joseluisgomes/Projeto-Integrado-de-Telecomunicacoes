@@ -78,7 +78,7 @@ class ServerWorker implements Runnable {
 								outputStream.write('3');
 								outputStream.flush();
 								PACKET_BELL = false;
-								while (!PACKET_BELL) ;
+								while (!PACKET_BELL) Thread.onSpinWait();
 								outputStream.write('4');
 								outputStream.flush();
 							}
