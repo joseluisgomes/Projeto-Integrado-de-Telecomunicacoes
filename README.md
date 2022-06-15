@@ -1,5 +1,5 @@
 
-# Sistema de Monitorização de Estações Meteorológicas
+# Sistema de Monitorização de Estações Meteorológicas 🌡
 
 Sistema sensor terminal para aquisição de dados de sensores (humidade, temperatura e pressão atmosférica) e envio via _wireless_ para um dispositivo central.
 
