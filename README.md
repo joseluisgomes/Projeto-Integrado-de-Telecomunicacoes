@@ -3,7 +3,7 @@
 
 Sistema sensor terminal para aquisição de dados de sensores (humidade, temperatura e pressão atmosférica) e envio via _wireless_ para um dispositivo central.
 
-## Authors
+## Autores
 
 * [@joseluisgomes](https://github.com/joseluisgomes)
 * [@alexthenotsogreat](https://github.com/alexthenotsogreat)
